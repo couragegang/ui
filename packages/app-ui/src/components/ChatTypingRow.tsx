@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native'
 import { Text } from '@couragegang/design-system'
-import { colors, fontSize, radius, spacing } from '@couragegang/design-system/tokens'
+import { colors, radius, spacing } from '@couragegang/design-system/tokens'
 
 import { strings } from '../strings'
 

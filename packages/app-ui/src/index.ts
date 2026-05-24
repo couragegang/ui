@@ -3,6 +3,7 @@ export type { AuthContextValue, AuthProviderProps } from './context/AuthProvider
 export { strings } from './strings'
 export type { ChatDrawerBridgeState } from './chat-drawer-bridge'
 export { ChatDrawerProvider, useChatDrawer, useChatDrawerRegistration } from './context/ChatDrawerContext'
+export type { ChatDrawerRegistration } from './context/ChatDrawerContext'
 export * from './screens'
 export { AppChrome } from './shell/AppChrome'
 export type { AppChromeProps } from './shell/AppChrome'

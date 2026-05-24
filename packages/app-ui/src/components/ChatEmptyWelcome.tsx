@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import Svg, { Path, Rect } from 'react-native-svg'
 import { Text } from '@couragegang/design-system'
-import { colors, fontSize, spacing } from '@couragegang/design-system/tokens'
+import { colors, spacing } from '@couragegang/design-system/tokens'
 
 import { strings } from '../strings'
 

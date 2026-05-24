@@ -13,7 +13,7 @@ import {
   View,
 } from 'react-native'
 import { Text } from '@couragegang/design-system'
-import { colors, fontSize, spacing } from '@couragegang/design-system/tokens'
+import { colors } from '@couragegang/design-system/tokens'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useChatDrawer } from '../context/ChatDrawerContext'

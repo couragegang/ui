@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 import { Text } from '@couragegang/design-system'
-import { colors, fontSize, spacing } from '@couragegang/design-system/tokens'
+import { colors, spacing } from '@couragegang/design-system/tokens'
 import type { Workspace } from '@couragegang/shared/types'
 
 import { useAuth } from '../context/AuthProvider'
@@ -69,7 +69,10 @@ export function DrawerContextSection({ onClose }: Props) {
         title={strings.context.pickOrg}
         options={orgOptions}
         selectedId={auth.me?.orgId ?? null}
-        onSelect={(id) => void auth.switchOrganization(id)}
+        onSelect={(id) => {
+          void auth.switchOrganization(id)
+          onClose()
+        }}
         onClose={() => setOrgOpen(false)}
       />
       <PickerModal
@@ -77,7 +80,10 @@ export function DrawerContextSection({ onClose }: Props) {
         title={strings.context.pickGroup}
         options={groupOptions}
         selectedId={auth.groupId}
-        onSelect={(id) => void auth.setGroupId(id)}
+        onSelect={(id) => {
+          void auth.setGroupId(id)
+          onClose()
+        }}
         onClose={() => setGroupOpen(false)}
       />
       <PickerModal
@@ -85,7 +91,10 @@ export function DrawerContextSection({ onClose }: Props) {
         title={strings.context.pickWorkspace}
         options={wsOptions}
         selectedId={auth.workspaceId}
-        onSelect={(id) => auth.setWorkspaceId(id)}
+        onSelect={(id) => {
+          auth.setWorkspaceId(id)
+          onClose()
+        }}
         onClose={() => setWsOpen(false)}
       />
     </View>
