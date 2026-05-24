@@ -1,17 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import type { Conversation } from '@couragegang/shared/types'
+import type { ChatDrawerBridgeState } from '@couragegang/app-ui'
 
-export type ChatDrawerRegistration = {
-  conversations: Conversation[]
-  activeId: string | null
-  showArchived: boolean
-  onToggleArchived: () => void
-  onSelect: (id: string) => void
-  onNew: () => void
-  focusComposer?: (delayMs?: number) => void
-  onArchive: (id: string) => void
-  onDelete: (id: string) => void
-}
+export type ChatDrawerRegistration = ChatDrawerBridgeState
 
 type ChatDrawerContextValue = {
   registration: ChatDrawerRegistration | null

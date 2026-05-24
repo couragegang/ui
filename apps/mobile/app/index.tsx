@@ -1,46 +1,24 @@
-import { useEffect, useState } from 'react'
+import { Redirect } from 'expo-router'
 import { View, StyleSheet } from 'react-native'
-import { Button, Text } from '@couragegang/design-system'
-import { useAuthSession } from '@couragegang/shared/hooks'
-import { bffApi } from '../src/platform/bff'
-import { authStorage, hydrateAuthStorage } from '../src/platform/storage'
+import { Text } from '@couragegang/design-system'
+import { useAuth } from '@couragegang/app-ui'
 
-export default function HomeScreen() {
-  const [ready, setReady] = useState(false)
+export default function Index() {
+  const auth = useAuth()
 
-  useEffect(() => {
-    hydrateAuthStorage().finally(() => setReady(true))
-  }, [])
-
-  const session = useAuthSession({
-    storage: authStorage,
-    api: bffApi,
-    enabled: ready,
-  })
-
-  if (!ready || session.loading) {
+  if (auth.loading) {
     return (
       <View style={styles.center}>
-        <Text>Загрузка…</Text>
+        <Text>{'Загрузка…'}</Text>
       </View>
     )
   }
 
-  return (
-    <View style={styles.center}>
-      <Text variant="title">Couragegang Mobile</Text>
-      <Text variant="muted" style={styles.gap}>
-        {session.me?.userId ? `user: ${session.me.userId}` : 'Не авторизован'}
-      </Text>
-      {!session.me && (
-        <Button
-          title="Демо-логин (нужен BFF)"
-          onPress={() => session.login('demo@example.com', 'password')}
-        />
-      )}
-      {session.me && <Button title="Выйти" onPress={() => session.logout()} />}
-    </View>
-  )
+  if (!auth.me) {
+    return <Redirect href="/login" />
+  }
+
+  return <Redirect href="/(app)/chat" />
 }
 
 const styles = StyleSheet.create({
@@ -48,8 +26,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
     backgroundColor: '#0f1419',
   },
-  gap: { marginVertical: 16 },
 })

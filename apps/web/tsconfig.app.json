@@ -15,7 +15,16 @@
     "jsx": "react-jsx",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@couragegang/shared": ["../../packages/shared/src"],
+      "@couragegang/shared/*": ["../../packages/shared/src/*"],
+      "@couragegang/api-client": ["../../packages/api-client/src"],
+      "@couragegang/design-system": ["../../packages/design-system/src"],
+      "@couragegang/design-system/*": ["../../packages/design-system/src/*"],
+      "@couragegang/app-ui": ["../../packages/app-ui/src"],
+      "@couragegang/app-ui/*": ["../../packages/app-ui/src/*"]
+    }
   },
   "include": ["src"]
 }

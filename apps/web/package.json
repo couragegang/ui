@@ -5,12 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:force": "vite --force",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "@couragegang/api-client": "workspace:*",
+    "@couragegang/app-ui": "workspace:*",
     "@couragegang/design-system": "workspace:*",
     "@couragegang/shared": "workspace:*",
     "i18next": "^26.2.0",

@@ -13,6 +13,9 @@ const EXEMPT_PREFIXES = [
   '/organizations/new',
   '/workspaces/new',
   '/groups/new',
+  '/mcp',
+  '/connections',
+  '/profile',
   ONBOARDING_PATH,
 ]
 
