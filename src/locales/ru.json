@@ -1,0 +1,69 @@
+{
+  "nav": {
+    "chat": "Чат",
+    "hitl": "Подтверждения",
+    "mcp": "Маркетплейс MCP",
+    "connections": "Подключения",
+    "knowledge": "Знания",
+    "profile": "Профиль"
+  },
+  "auth": {
+    "loginTitle": "Вход в аккаунт",
+    "registerTitle": "Регистрация",
+    "email": "Email",
+    "password": "Пароль",
+    "displayName": "Имя",
+    "orgName": "Название организации (опционально)",
+    "login": "Войти",
+    "register": "Создать аккаунт",
+    "logout": "Выйти",
+    "toRegister": "Создать аккаунт",
+    "toLogin": "Уже есть аккаунт? Войти"
+  },
+  "context": {
+    "org": "Организация",
+    "workspace": "Workspace",
+    "noWorkspace": "Выберите workspace в шапке или зарегистрируйтесь с организацией."
+  },
+  "chat": {
+    "empty": "Задайте вопрос ассистенту — ответ появится здесь.",
+    "placeholder": "Сообщение…",
+    "send": "Отправить",
+    "you": "Вы",
+    "agent": "Ассистент",
+    "awaitingApproval": "Требуется подтверждение (id: {{id}}). Откройте раздел «Подтверждения»."
+  },
+  "hitl": {
+    "empty": "Нет ожидающих подтверждений.",
+    "approve": "Одобрить",
+    "reject": "Отклонить"
+  },
+  "mcp": {
+    "install": "Установка: {{name}}",
+    "label": "Название подключения",
+    "token": "Integration token",
+    "installBtn": "Установить",
+    "installed": "Подключение создано."
+  },
+  "connections": {
+    "empty": "Нет установленных инструментов в этом workspace."
+  },
+  "knowledge": {
+    "placeholder": "Поиск по базе знаний…",
+    "search": "Найти",
+    "untitled": "Без названия"
+  },
+  "profile": {
+    "userId": "User ID",
+    "orgId": "Org ID",
+    "groupId": "Group ID",
+    "workspaceId": "Workspace ID",
+    "workspaces": "Workspaces",
+    "permissions": "Права",
+    "note": "Полный профиль IAM (/me, сессии) — через BFF в следующих итерациях; сейчас данные из JWT introspect."
+  },
+  "common": {
+    "refresh": "Обновить",
+    "loading": "Загрузка…"
+  }
+}
