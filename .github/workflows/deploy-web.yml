@@ -7,6 +7,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: deploy-ui-web-${{ github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   changes:
     runs-on: ubuntu-latest
@@ -26,28 +30,50 @@ jobs:
               - 'pnpm-workspace.yaml'
               - '.github/workflows/deploy-web.yml'
 
-  deploy-test:
+  deploy:
     needs: changes
-    if: github.ref == 'refs/heads/test' && needs.changes.outputs.web == 'true'
-    permissions:
-      contents: read
-    uses: couragegang/platform/.github/workflows/deploy-web-ui.yml@test
-    with:
-      contour: test
-      sha: ${{ github.sha }}
-      trigger_repository: ${{ github.repository }}
-    secrets:
-      CALLER_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    if: needs.changes.outputs.web == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: ${{ github.ref == 'refs/heads/main' && 'prod' || 'test' }}
+    env:
+      REMOTE_DIR: ${{ github.ref == 'refs/heads/main' && '/var/www/ai.valoriel.ru' || '/var/www/ai-test.valoriel.ru' }}
+    steps:
+      - uses: actions/checkout@v4
 
-  deploy-prod:
-    needs: changes
-    if: github.ref == 'refs/heads/main' && needs.changes.outputs.web == 'true'
-    permissions:
-      contents: read
-    uses: couragegang/platform/.github/workflows/deploy-web-ui.yml@main
-    with:
-      contour: prod
-      sha: ${{ github.sha }}
-      trigger_repository: ${{ github.repository }}
-    secrets:
-      CALLER_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Build SPA (apps/web)
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm --filter @couragegang/web build
+          test -f apps/web/dist/index.html
+
+      - name: Rsync static to VPS
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_SSH_PORT: ${{ secrets.VPS_SSH_PORT }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${SSH_KEY:-}" || -z "${VPS_HOST:-}" || -z "${VPS_USER:-}" ]]; then
+            echo "Set VPS_HOST, VPS_USER, VPS_SSH_KEY in GitHub Environment '${{ github.ref == 'refs/heads/main' && 'prod' || 'test' }}' (repo couragegang/ui)" >&2
+            exit 1
+          fi
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          PORT="${VPS_SSH_PORT:-22}"
+          rsync -avz --delete --no-times --omit-dir-times \
+            -e "ssh -i ~/.ssh/deploy_key -p ${PORT} -o StrictHostKeyChecking=no" \
+            apps/web/dist/ "${VPS_USER}@${VPS_HOST}:${REMOTE_DIR}/"
+          echo "Deployed ui ${GITHUB_SHA} → ${VPS_USER}@${VPS_HOST}:${REMOTE_DIR}"
