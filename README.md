@@ -36,13 +36,13 @@ pnpm dev:mobile
 |----------|--------|----------|
 | `ci-web.yml` | изменения `apps/web/`, `packages/`, lockfile | `pnpm` build web |
 | `ci-mobile.yml` | изменения `apps/mobile/`, `packages/`, lockfile | `tsc --noEmit` mobile |
-| `trigger-deploy.yml` | push `test`/`main` + web paths | `repository_dispatch` → platform `deploy-web-ui.yml` |
+| `trigger-deploy.yml` | push `test`/`main` + web paths | `workflow_call` → platform `deploy-web-ui.yml` (как BC) |
 
 Изменения только в `apps/mobile/` **не** деплоят web на VPS.
 
-**Секреты:** `VPS_*` только в **platform** Environment `test`/`prod`. В **ui** один раз: `PLATFORM_DISPATCH_TOKEN` — fine-grained PAT с **Actions: read/write** на `couragegang/platform` (не дублирует VPS). `workflow_call` из другого репо не видит Environment secrets platform — поэтому dispatch, не `uses:`.
+**Секреты (один раз в platform):** кроме Environment `test`/`prod` добавьте `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY` в [**Repository secrets** `couragegang/platform`](https://github.com/couragegang/platform/settings/secrets/actions) — те же значения. Без этого `workflow_call` из ui не видит VPS (ограничение GitHub). В **ui** секреты VPS не нужны.
 
-Ручной деплой: `platform/scripts/deploy-web-ui.sh` или **Actions → Deploy web-ui to VPS** в `couragegang/platform`.
+Ручной деплой: `platform/scripts/deploy-web-ui.sh` или **Deploy web-ui to VPS** в platform.
 
 ## OpenAPI
 

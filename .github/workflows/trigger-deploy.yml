@@ -1,7 +1,7 @@
 name: Trigger platform deploy
 
-# VPS_* остаются только в platform Environment test/prod.
-# GITHUB_TOKEN не может вызвать другой репозиторий — нужен PAT (см. README).
+# VPS_* — только в platform (Environment + Repository secrets, см. platform/docs).
+# workflow_call из другого репо не видит Environment secrets; Repository secrets platform — да.
 
 on:
   push:
@@ -32,53 +32,17 @@ jobs:
   deploy-test:
     needs: changes
     if: github.ref == 'refs/heads/test' && needs.changes.outputs.web == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dispatch platform deploy (test)
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.PLATFORM_DISPATCH_TOKEN }}
-          script: |
-            const token = process.env.GITHUB_TOKEN;
-            if (!token) {
-              core.setFailed(
-                'Add secret PLATFORM_DISPATCH_TOKEN in couragegang/ui (fine-grained PAT: Actions read/write on couragegang/platform). VPS secrets stay in platform only.',
-              );
-            }
-            await github.rest.repos.createDispatchEvent({
-              owner: 'couragegang',
-              repo: 'platform',
-              event_type: 'deploy-ui',
-              client_payload: {
-                contour: 'test',
-                sha: context.sha,
-                trigger_repository: `${context.repo.owner}/${context.repo.repo}`,
-              },
-            });
+    uses: couragegang/platform/.github/workflows/deploy-web-ui.yml@test
+    with:
+      contour: test
+      sha: ${{ github.sha }}
+      trigger_repository: ${{ github.repository }}
 
   deploy-prod:
     needs: changes
     if: github.ref == 'refs/heads/main' && needs.changes.outputs.web == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dispatch platform deploy (prod)
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.PLATFORM_DISPATCH_TOKEN }}
-          script: |
-            const token = process.env.GITHUB_TOKEN;
-            if (!token) {
-              core.setFailed(
-                'Add secret PLATFORM_DISPATCH_TOKEN in couragegang/ui (fine-grained PAT: Actions read/write on couragegang/platform).',
-              );
-            }
-            await github.rest.repos.createDispatchEvent({
-              owner: 'couragegang',
-              repo: 'platform',
-              event_type: 'deploy-ui',
-              client_payload: {
-                contour: 'prod',
-                sha: context.sha,
-                trigger_repository: `${context.repo.owner}/${context.repo.repo}`,
-              },
-            });
+    uses: couragegang/platform/.github/workflows/deploy-web-ui.yml@main
+    with:
+      contour: prod
+      sha: ${{ github.sha }}
+      trigger_repository: ${{ github.repository }}
