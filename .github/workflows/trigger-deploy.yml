@@ -1,6 +1,6 @@
 name: Trigger platform deploy
 
-# VPS_* только в platform. GITHUB_TOKEN не вызывает другой репозиторий → PLATFORM_DISPATCH_TOKEN (PAT).
+# VPS_* только в platform Environment. PAT в ui → workflow_dispatch на platform@test|main.
 
 on:
   push:
@@ -33,19 +33,19 @@ jobs:
     if: github.ref == 'refs/heads/test' && needs.changes.outputs.web == 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Dispatch platform deploy (test)
+      - name: Run platform deploy-web-ui (test)
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.PLATFORM_DISPATCH_TOKEN }}
           script: |
-            await github.rest.repos.createDispatchEvent({
+            await github.rest.actions.createWorkflowDispatch({
               owner: 'couragegang',
               repo: 'platform',
-              event_type: 'deploy-ui',
-              client_payload: {
+              workflow_id: 'deploy-web-ui.yml',
+              ref: 'test',
+              inputs: {
                 contour: 'test',
                 sha: context.sha,
-                trigger_repository: `${context.repo.owner}/${context.repo.repo}`,
               },
             });
 
@@ -54,18 +54,18 @@ jobs:
     if: github.ref == 'refs/heads/main' && needs.changes.outputs.web == 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Dispatch platform deploy (prod)
+      - name: Run platform deploy-web-ui (prod)
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.PLATFORM_DISPATCH_TOKEN }}
           script: |
-            await github.rest.repos.createDispatchEvent({
+            await github.rest.actions.createWorkflowDispatch({
               owner: 'couragegang',
               repo: 'platform',
-              event_type: 'deploy-ui',
-              client_payload: {
+              workflow_id: 'deploy-web-ui.yml',
+              ref: 'main',
+              inputs: {
                 contour: 'prod',
                 sha: context.sha,
-                trigger_repository: `${context.repo.owner}/${context.repo.repo}`,
               },
             });
