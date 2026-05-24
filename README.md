@@ -25,15 +25,15 @@ npm run build   # → dist/
 | **`test`** | staging `https://ai-test.valoriel.ru` |
 | **`main`** | prod `https://ai.valoriel.ru` |
 
-Push в `test` / `main` → workflow **`deploy.yml`** (build + rsync на VPS).
+Push в `test` / `main` → **`trigger-deploy.yml`** → reusable **`platform/deploy-web-ui.yml`** → rsync на VPS.
 
-Секреты **`VPS_HOST`**, **`VPS_USER`**, **`VPS_SSH_KEY`** — GitHub Environments **`test`** / **`prod`** в **этом репозитории** (те же значения, что в platform).
+Секреты **`VPS_*`** — GitHub Environments **`test`** / **`prod`** в **platform** (как у `deploy-vps`). Checkout private web-ui — через `CALLER_ACCESS_TOKEN` (GITHUB_TOKEN web-ui).
 
 Ручной деплой: `../platform/scripts/deploy-web-ui.sh test|prod user@vps`.
 
 ## CI
 
-- **`ci.yml`** — lint + build на PR/push в `test`/`main`
-- **`trigger-deploy.yml`** — выкладка после merge
+- **`ci.yml`** — build на PR/push в `test`/`main`
+- **`trigger-deploy.yml`** — `workflow_call` → platform **`deploy-web-ui.yml`**
 
 Сценарии UI: [`../cursor-context/docs/ui-api-scenarios.md`](../cursor-context/docs/ui-api-scenarios.md) (K1–K8).
