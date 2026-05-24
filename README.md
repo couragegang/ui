@@ -36,11 +36,11 @@ pnpm dev:mobile
 |----------|--------|----------|
 | `ci-web.yml` | изменения `apps/web/`, `packages/`, lockfile | `pnpm` build web |
 | `ci-mobile.yml` | изменения `apps/mobile/`, `packages/`, lockfile | `tsc --noEmit` mobile |
-| `deploy-web.yml` | push `test`/`main` + web paths | pnpm build + rsync VPS (secrets в **ui** Environment `test`/`prod`) |
+| `trigger-deploy.yml` | push `test`/`main` + web paths | `workflow_call` → platform `deploy-web-ui.yml` (VPS secrets только в **platform**) |
 
 Изменения только в `apps/mobile/` **не** деплоят web на VPS.
 
-**Secrets (repo `couragegang/ui`):** в Environment **`test`** / **`prod`** — `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY` (те же значения, что в `platform`). Ручной деплой: `platform/scripts/deploy-web-ui.sh`.
+Ручной деплой: `platform/scripts/deploy-web-ui.sh` или dispatch **Deploy web-ui to VPS** в `couragegang/platform`.
 
 ## OpenAPI
 

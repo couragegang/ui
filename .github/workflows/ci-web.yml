@@ -27,7 +27,7 @@ jobs:
               - 'pnpm-lock.yaml'
               - 'pnpm-workspace.yaml'
               - '.github/workflows/ci-web.yml'
-              - '.github/workflows/deploy-web.yml'
+              - '.github/workflows/trigger-deploy.yml'
 
   build:
     needs: changes
