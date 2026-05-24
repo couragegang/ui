@@ -1,0 +1,31 @@
+{
+  "name": "@couragegang/mobile",
+  "version": "0.0.1",
+  "private": true,
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "lint": "expo lint"
+  },
+  "dependencies": {
+    "@couragegang/api-client": "workspace:*",
+    "@couragegang/design-system": "workspace:*",
+    "@couragegang/shared": "workspace:*",
+    "expo": "~53.0.9",
+    "expo-router": "~5.0.7",
+    "expo-secure-store": "~14.2.3",
+    "expo-status-bar": "~2.2.3",
+    "react": "19.0.0",
+    "react-native": "0.79.2",
+    "react-native-safe-area-context": "5.4.0",
+    "react-native-screens": "~4.10.0"
+  },
+  "devDependencies": {
+    "babel-preset-expo": "~13.2.3",
+    "@babel/core": "^7.26.0",
+    "@types/react": "~19.0.10",
+    "typescript": "~5.8.3"
+  }
+}

@@ -1,39 +1,61 @@
-# Courage Gang — Web UI (клиентский SPA)
+﻿# Couragegang UI (monorepo)
 
-React + TypeScript + Vite. Единая точка API — BFF **`/api/*`** (nginx на VPS проксирует в `bff-gateway`).
+Кросс-платформенный фронт: **React (web)** + **React Native (mobile)** с общими пакетами.
 
-## Локальная разработка
+## Структура
 
-```bash
-npm install
-npm run dev
+```text
+ui/
+  apps/
+    web/          @couragegang/web     — Vite + React (бывший web-ui)
+    mobile/       @couragegang/mobile  — Expo + React Native
+  packages/
+    api-client/   @couragegang/api-client   — HTTP + OpenAPI (bff)
+    shared/       @couragegang/shared       — хуки, типы, AuthStorage
+    design-system/ @couragegang/design-system — токены + RN-компоненты (web через react-native-web)
 ```
 
-Vite proxy: `/api` → `http://localhost:8082/v1/bff` (нужен поднятый BFF).
+## Требования
 
-## Сборка
+- Node 20+ (в проекте `.nvmrc` → 22; на Windows: `nvm use 22`)
+- [pnpm](https://pnpm.io) 9+ (`corepack enable` или `npx pnpm@9.15.0`)
+
+## Команды
 
 ```bash
-npm ci
-npm run build   # → dist/
+cd ui
+pnpm install
+pnpm generate:api    # openapi-typescript из services/api-contracts/bff/openapi.yaml
+pnpm dev:web
+pnpm dev:mobile
 ```
 
-## Git и деплой (как BC)
+## OpenAPI
 
-| Ветка | Деплой |
-|-------|--------|
-| **`test`** | staging `https://ai-test.valoriel.ru` |
-| **`main`** | prod `https://ai.valoriel.ru` |
+Источник правды: `services/api-contracts/bff/openapi.yaml`.
 
-Push в `test` / `main` → **`trigger-deploy.yml`** → reusable **`platform/deploy-web-ui.yml`** → rsync на VPS.
+После изменения контракта:
 
-Секреты **`VPS_*`** — GitHub Environments **`test`** / **`prod`** в **platform** (как у `deploy-vps`). Checkout private web-ui — через `CALLER_ACCESS_TOKEN` (GITHUB_TOKEN web-ui).
+```bash
+pnpm generate:api
+```
 
-Ручной деплой: `../platform/scripts/deploy-web-ui.sh test|prod user@vps`.
+Расширяйте `createBffApi` в `packages/api-client` или переносите методы на `createBffOpenApiClient` (openapi-fetch).
 
-## CI
+## Web
 
-- **`ci.yml`** — build на PR/push в `test`/`main`
-- **`trigger-deploy.yml`** — `workflow_call` → platform **`deploy-web-ui.yml`**
+- API base: `VITE_API_BASE` (default `/api`, proxy → BFF :8082)
+- Общий auth: `packages/shared` + `apps/web/src/platform/`
 
-Сценарии UI: [`../cursor-context/docs/ui-api-scenarios.md`](../cursor-context/docs/ui-api-scenarios.md) (K1–K8).
+## Mobile
+
+- API base: `EXPO_PUBLIC_API_BASE`
+- Токены: `expo-secure-store` (`apps/mobile/src/platform/storage.ts`)
+
+## Старый `web-ui/`
+
+Каталог `ui/web-ui` — предыдущий standalone-клон; разработка ведётся в **`apps/web`**. Git remote перенесите на корень `ui/` при необходимости.
+
+## Публикация (опционально)
+
+Сейчас пакеты `workspace:*`. Для отдельных git-репозиториев позже можно вынести `packages/*` в npm/GitHub Packages без изменения импортов в apps.

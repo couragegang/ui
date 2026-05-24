@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "Couragegang",
+    "slug": "couragegang-mobile",
+    "version": "0.0.1",
+    "scheme": "couragegang",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.couragegang.app"
+    },
+    "android": {
+      "package": "com.couragegang.app"
+    },
+    "plugins": ["expo-router"]
+  }
+}

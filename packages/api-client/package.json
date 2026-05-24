@@ -1,0 +1,19 @@
+{
+  "name": "@couragegang/api-client",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "generate": "openapi-typescript ../../../services/api-contracts/bff/openapi.yaml -o src/generated/bff-schema.ts"
+  },
+  "dependencies": {
+    "openapi-fetch": "^0.14.0"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.8.0",
+    "typescript": "~5.8.3"
+  }
+}

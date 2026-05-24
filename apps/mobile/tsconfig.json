@@ -1,0 +1,12 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "@couragegang/shared": ["../../packages/shared/src"],
+      "@couragegang/api-client": ["../../packages/api-client/src"],
+      "@couragegang/design-system": ["../../packages/design-system/src"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx"]
+}

@@ -1,33 +1,26 @@
 export type AuthTokens = {
   accessToken: string
   refreshToken?: string
-  accessExpiresIn?: number
-  tokenType?: string
 }
 
 export type BffMe = {
-  authenticated: boolean
-  userId: string
+  userId?: string
   orgId?: string
   groupId?: string
   workspaceId?: string
-  permissions: string[]
+  permissions?: string[]
 }
 
 export type Workspace = {
   id: string
-  name: string
-  groupId?: string
+  name?: string
   orgId?: string
 }
 
-export type WorkspaceList = { items: Workspace[] }
-
 export type McpCatalogItem = {
   connectorKey: string
-  displayName: string
+  displayName?: string
   description?: string
-  connectionFormSchema?: unknown
 }
 
 export type McpInstallation = {
@@ -38,22 +31,22 @@ export type McpInstallation = {
 }
 
 export type ChatResponse = {
-  reply: string
-  status: string
+  reply?: string
+  status?: string
+  conversationId?: string
   pendingApprovalId?: string
 }
 
 export type PendingApproval = {
   id: string
-  status: string
+  status?: string
   toolName?: string
-  workspaceId?: string
   createdAt?: string
 }
 
 export type KnowledgeHit = {
   title?: string
   snippet?: string
+  sourceId?: string
   externalUri?: string
-  score?: number
 }
