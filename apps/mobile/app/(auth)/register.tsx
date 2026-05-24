@@ -1,6 +1,8 @@
 import { Redirect, useRouter } from 'expo-router'
-import { RegisterScreen } from '@couragegang/app-ui/screens'
+import { AuthScreen } from '@couragegang/app-ui/screens'
 import { useAuth } from '@couragegang/app-ui'
+
+const API_BASE = process.env.EXPO_PUBLIC_API_BASE ?? 'https://ai-test.valoriel.ru/api'
 
 export default function RegisterRoute() {
   const router = useRouter()
@@ -11,9 +13,12 @@ export default function RegisterRoute() {
   }
 
   return (
-    <RegisterScreen
+    <AuthScreen
+      mode="register"
+      apiBaseUrl={API_BASE}
+      returnPath="/chat"
       onSuccess={() => router.replace('/(app)/onboarding/tools')}
-      onGoLogin={() => router.replace('/login')}
+      onSwitchMode={() => router.replace('/login')}
     />
   )
 }

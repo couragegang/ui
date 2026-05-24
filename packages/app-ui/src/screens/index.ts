@@ -1,3 +1,5 @@
+export { AuthScreen } from './AuthScreen'
+export type { AuthScreenProps } from './AuthScreen'
 export { LoginScreen } from './LoginScreen'
 export { RegisterScreen } from './RegisterScreen'
 export { ChatScreen } from './ChatScreen'

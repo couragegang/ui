@@ -1,9 +1,8 @@
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { RegisterScreen } from '@couragegang/app-ui/screens'
+import { AuthScreen } from '@couragegang/app-ui/screens'
 
-import { AuthDivider, AuthPageLayout } from '../components/auth/AuthPageLayout'
-import { OAuthProviderButtons } from '../components/auth/OAuthProviderButtons'
+import { AuthPageLayout } from '../components/auth/AuthPageLayout'
 import { RnHost } from '../components/RnHost'
 
 export function RegisterRoute() {
@@ -28,14 +27,15 @@ export function RegisterRoute() {
         </p>
       }
     >
-      <OAuthProviderButtons returnTo={returnTo} mode="register" />
-      <AuthDivider />
       <RnHost>
-        <RegisterScreen
+        <AuthScreen
+          mode="register"
           theme="light"
           hideTitle
+          hideModeSwitch
+          returnPath={returnTo.startsWith('/') ? returnTo : '/chat'}
           onSuccess={() => navigate(returnTo.startsWith('/') ? returnTo : '/chat')}
-          onGoLogin={() => navigate(loginTo)}
+          onSwitchMode={() => navigate(loginTo)}
         />
       </RnHost>
     </AuthPageLayout>

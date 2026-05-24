@@ -10,6 +10,8 @@ export const strings = {
   auth: {
     loginTitle: 'Вход',
     registerTitle: 'Регистрация',
+    loginSubtitle: 'Войдите, чтобы продолжить работу с ассистентом и инструментами.',
+    registerSubtitle: 'Создайте аккаунт и workspace для команды за пару минут.',
     email: 'Email',
     password: 'Пароль',
     displayName: 'Имя',
@@ -20,6 +22,11 @@ export const strings = {
     hasAccount: 'Уже есть аккаунт?',
     toRegister: 'Создать',
     toLogin: 'Войти',
+    orDivider: 'или',
+    continueGoogle: 'Войти через Google',
+    continueGithub: 'Войти через GitHub',
+    signUpGoogle: 'Зарегистрироваться через Google',
+    signUpGithub: 'Зарегистрироваться через GitHub',
   },
   nav: {
     chat: 'Чат',

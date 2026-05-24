@@ -1,28 +1,47 @@
-import { useTranslation } from 'react-i18next'
+import {
+  buildOauthStartUrl,
+  buildRedirectAfter,
+  resolveAppOrigin,
+  type OidcProvider,
+} from '../auth/oauth'
+import { strings } from '../strings'
 
-type Props = {
-  returnTo?: string
+export type OAuthProviderButtonsProps = {
   mode?: 'login' | 'register'
+  returnPath?: string
+  apiBaseUrl?: string
+  appOrigin?: string
 }
 
-function oauthHref(provider: 'google' | 'github', returnTo?: string): string {
-  const base = `/api/auth/oidc/${provider}/start`
-  if (!returnTo || !returnTo.startsWith('/')) return base
-  return `${base}?returnTo=${encodeURIComponent(returnTo)}`
+function oauthHref(
+  provider: OidcProvider,
+  redirectAfter: string,
+  apiBaseUrl: string,
+): string {
+  return buildOauthStartUrl(provider, redirectAfter, apiBaseUrl)
 }
 
-export function OAuthProviderButtons({ returnTo, mode = 'login' }: Props) {
-  const { t } = useTranslation()
-  const googleLabel = mode === 'register' ? t('auth.signUpGoogle') : t('auth.continueGoogle')
-  const githubLabel = mode === 'register' ? t('auth.signUpGithub') : t('auth.continueGithub')
+export function OAuthProviderButtons({
+  mode = 'login',
+  returnPath = '/chat',
+  apiBaseUrl = '/api',
+  appOrigin,
+}: OAuthProviderButtonsProps) {
+  const origin =
+    appOrigin ??
+    (typeof window !== 'undefined' ? window.location.origin : resolveAppOrigin(apiBaseUrl))
+  const redirectAfter = buildRedirectAfter(returnPath, origin)
+
+  const googleLabel = mode === 'register' ? strings.auth.signUpGoogle : strings.auth.continueGoogle
+  const githubLabel = mode === 'register' ? strings.auth.signUpGithub : strings.auth.continueGithub
 
   return (
     <div className="oauth-providers">
-      <a className="oauth-btn oauth-btn--google" href={oauthHref('google', returnTo)}>
+      <a className="oauth-btn oauth-btn--google" href={oauthHref('google', redirectAfter, apiBaseUrl)}>
         <GoogleIcon />
         <span>{googleLabel}</span>
       </a>
-      <a className="oauth-btn oauth-btn--github" href={oauthHref('github', returnTo)}>
+      <a className="oauth-btn oauth-btn--github" href={oauthHref('github', redirectAfter, apiBaseUrl)}>
         <GitHubIcon />
         <span>{githubLabel}</span>
       </a>

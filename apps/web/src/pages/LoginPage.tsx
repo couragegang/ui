@@ -1,36 +1,16 @@
-import { useState } from 'react'
-import type { FormEvent } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useAuth } from '../context/AuthContext'
-import { ApiError } from '../lib/api'
-import { AuthDivider, AuthPageLayout } from '../components/auth/AuthPageLayout'
-import { OAuthProviderButtons } from '../components/auth/OAuthProviderButtons'
+import { AuthScreen } from '@couragegang/app-ui/screens'
 
+import { AuthPageLayout } from '../components/auth/AuthPageLayout'
+import { RnHost } from '../components/RnHost'
+
+/** @deprecated Используйте `routes/LoginRoute`. */
 export function LoginPage() {
   const { t } = useTranslation()
-  const { login } = useAuth()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const returnTo = searchParams.get('returnTo') ?? '/chat'
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-
-  async function onSubmit(e: FormEvent) {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
-    try {
-      await login(email, password)
-      navigate(returnTo.startsWith('/') ? returnTo : '/chat')
-    } catch (err) {
-      setError(err instanceof ApiError ? err.body ?? err.message : String(err))
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const registerTo =
     returnTo && returnTo !== '/chat'
@@ -48,34 +28,16 @@ export function LoginPage() {
         </p>
       }
     >
-      <OAuthProviderButtons returnTo={returnTo} />
-      <AuthDivider />
-      <form onSubmit={onSubmit} className="form auth-form">
-        <label>
-          {t('auth.email')}
-          <input
-            type="email"
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          {t('auth.password')}
-          <input
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        {error && <p className="error">{error}</p>}
-        <button type="submit" className="btn primary auth-submit" disabled={loading}>
-          {loading ? t('common.loading') : t('auth.login')}
-        </button>
-      </form>
+      <RnHost>
+        <AuthScreen
+          mode="login"
+          theme="light"
+          hideTitle
+          hideModeSwitch
+          returnPath={returnTo.startsWith('/') ? returnTo : '/chat'}
+          onSuccess={() => navigate(returnTo.startsWith('/') ? returnTo : '/chat')}
+        />
+      </RnHost>
     </AuthPageLayout>
   )
 }

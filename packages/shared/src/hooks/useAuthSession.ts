@@ -467,6 +467,24 @@ export function useAuthSession({ storage, api, enabled = true }: AuthSessionConf
 
 
 
+  const applyOAuthTokens = useCallback(
+
+    (accessToken: string, refreshToken?: string) => {
+
+      clearSessionCache()
+
+      storage.setTokens(accessToken, refreshToken)
+
+      void refresh()
+
+    },
+
+    [refresh, storage],
+
+  )
+
+
+
   const orgLabel = useMemo(() => {
 
     const orgId = me?.orgId
@@ -527,6 +545,8 @@ export function useAuthSession({ storage, api, enabled = true }: AuthSessionConf
 
       setWorkspaceId,
 
+      applyOAuthTokens,
+
       refresh: async () => {
 
         clearSessionCache()
@@ -572,6 +592,8 @@ export function useAuthSession({ storage, api, enabled = true }: AuthSessionConf
       setGroupId,
 
       setWorkspaceId,
+
+      applyOAuthTokens,
 
       refresh,
 
