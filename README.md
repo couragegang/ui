@@ -30,6 +30,16 @@ pnpm dev:web
 pnpm dev:mobile
 ```
 
+## CI/CD (path filters)
+
+| Workflow | Когда | Действие |
+|----------|--------|----------|
+| `ci-web.yml` | изменения `apps/web/`, `packages/`, lockfile | `pnpm` build web |
+| `ci-mobile.yml` | изменения `apps/mobile/`, `packages/`, lockfile | `tsc --noEmit` mobile |
+| `deploy-web.yml` | push `test`/`main` + web paths | platform `deploy-web-ui.yml` → rsync VPS |
+
+Изменения только в `apps/mobile/` **не** деплоят web на VPS.
+
 ## OpenAPI
 
 Источник правды: `services/api-contracts/bff/openapi.yaml`.
