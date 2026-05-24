@@ -3,7 +3,6 @@ export type {
   AuthTokens,
   BffMe,
   ChatResponse,
-  KnowledgeHit,
   McpCatalogItem,
   McpInstallation,
   PendingApproval,

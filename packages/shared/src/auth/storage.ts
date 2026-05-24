@@ -6,11 +6,14 @@ export type AuthStorage = {
   clearAuth(): void
   getWorkspaceId(): string | null
   setWorkspaceId(id: string | null): void
+  getGroupId(): string | null
+  setGroupId(id: string | null): void
 }
 
 const ACCESS = 'cg.accessToken'
 const REFRESH = 'cg.refreshToken'
 const WORKSPACE = 'cg.workspaceId'
+const GROUP = 'cg.groupId'
 
 /** Web (localStorage) — подключайте в apps/web. */
 export function createWebAuthStorage(storage: Storage = localStorage): AuthStorage {
@@ -25,11 +28,17 @@ export function createWebAuthStorage(storage: Storage = localStorage): AuthStora
       storage.removeItem(ACCESS)
       storage.removeItem(REFRESH)
       storage.removeItem(WORKSPACE)
+      storage.removeItem(GROUP)
     },
     getWorkspaceId: () => storage.getItem(WORKSPACE),
     setWorkspaceId(id) {
       if (id) storage.setItem(WORKSPACE, id)
       else storage.removeItem(WORKSPACE)
+    },
+    getGroupId: () => storage.getItem(GROUP),
+    setGroupId(id) {
+      if (id) storage.setItem(GROUP, id)
+      else storage.removeItem(GROUP)
     },
   }
 }

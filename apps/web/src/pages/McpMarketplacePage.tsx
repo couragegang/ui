@@ -1,80 +1,69 @@
 import { useEffect, useState } from 'react'
-import type { FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
-import { fetchCatalog, installConnector, ApiError } from '../lib/api'
+import { fetchCatalog } from '../lib/api'
 import type { McpCatalogItem } from '../lib/types'
+import { McpInstallModal } from '../components/mcp/McpInstallModal'
 
 export function McpMarketplacePage() {
   const { t } = useTranslation()
-  const { workspaceId } = useAuth()
+  const { workspaces, workspaceId, me } = useAuth()
   const [catalog, setCatalog] = useState<McpCatalogItem[]>([])
   const [selected, setSelected] = useState<McpCatalogItem | null>(null)
-  const [token, setToken] = useState('')
-  const [label, setLabel] = useState('')
-  const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
+  function loadCatalog() {
+    setLoading(true)
     void fetchCatalog()
       .then((c) => setCatalog(c.items ?? []))
       .catch((e) => setError(String(e)))
-  }, [])
-
-  async function onInstall(e: FormEvent) {
-    e.preventDefault()
-    if (!selected || !workspaceId) return
-    setError('')
-    setMessage('')
-    try {
-      await installConnector(workspaceId, {
-        connectorKey: selected.connectorKey,
-        displayLabel: label || selected.displayName,
-        form: { integration_token: token },
-      })
-      setMessage(t('mcp.installed'))
-      setToken('')
-    } catch (err) {
-      setError(err instanceof ApiError ? err.body ?? err.message : String(err))
-    }
+      .finally(() => setLoading(false))
   }
+
+  useEffect(() => {
+    loadCatalog()
+  }, [])
 
   return (
     <div className="page">
       <h1>{t('nav.mcp')}</h1>
-      <div className="grid-2">
-        <ul className="card-list">
-          {catalog.map((c) => (
-            <li
-              key={c.connectorKey}
-              className={`card clickable ${selected?.connectorKey === c.connectorKey ? 'selected' : ''}`}
+      <p className="muted">{t('mcp.marketplaceHint')}</p>
+
+      {loading && <p className="muted">{t('common.loading')}</p>}
+      {error && <p className="error">{error}</p>}
+
+      <ul className="card-list marketplace-grid">
+        {catalog.map((c) => (
+          <li key={c.connectorKey}>
+            <button
+              type="button"
+              className="card clickable marketplace-card"
               onClick={() => setSelected(c)}
             >
-              <div className="card-title">{c.displayName}</div>
+              <div className="card-title">{c.displayName ?? c.connectorKey}</div>
               <div className="muted">{c.connectorKey}</div>
-              <p>{c.description}</p>
-            </li>
-          ))}
-        </ul>
-        {selected && (
-          <form className="card form" onSubmit={onInstall}>
-            <h2>{t('mcp.install', { name: selected.displayName })}</h2>
-            <label>
-              {t('mcp.label')}
-              <input value={label} onChange={(e) => setLabel(e.target.value)} />
-            </label>
-            <label>
-              {t('mcp.token')}
-              <input type="password" value={token} onChange={(e) => setToken(e.target.value)} required />
-            </label>
-            {error && <p className="error">{error}</p>}
-            {message && <p className="success">{message}</p>}
-            <button type="submit" className="btn primary" disabled={!workspaceId}>
-              {t('mcp.installBtn')}
+              {c.description && <p>{c.description}</p>}
+              <span className="badge">{t('mcp.addTool')}</span>
             </button>
-          </form>
-        )}
-      </div>
+          </li>
+        ))}
+      </ul>
+
+      {!loading && catalog.length === 0 && !error && (
+        <p className="muted center">{t('mcp.catalogEmpty')}</p>
+      )}
+
+      {selected && (
+        <McpInstallModal
+          item={selected}
+          workspaces={workspaces}
+          initialWorkspaceId={workspaceId}
+          permissions={me?.permissions}
+          onClose={() => setSelected(null)}
+          onInstalled={loadCatalog}
+        />
+      )}
     </div>
   )
 }

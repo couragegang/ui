@@ -1,67 +1,50 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import { useTranslation } from 'react-i18next'
-
-const nav = [
-  { to: '/chat', key: 'nav.chat' },
-  { to: '/hitl', key: 'nav.hitl' },
-  { to: '/mcp', key: 'nav.mcp' },
-  { to: '/connections', key: 'nav.connections' },
-  { to: '/knowledge', key: 'nav.knowledge' },
-  { to: '/profile', key: 'nav.profile' },
-]
+import { useState } from 'react'
+import { Outlet, useLocation } from 'react-router-dom'
+import { ChatPage } from '../pages/ChatPage'
+import { AppNavDrawer } from './AppNavDrawer'
+import { AppSecondaryPanel } from './AppSecondaryPanel'
+import { isSecondaryRoute, secondaryRouteTitleKey } from '../lib/app-routes'
+import type { DrawerFocusSection } from './AppNavDrawer'
+import { ChatDrawerProvider } from '../context/ChatDrawerContext'
+import { ToolsOnboardingRedirect } from './ToolsOnboardingRedirect'
+import { ToolsOnboardingPanel } from './ToolsOnboardingPanel'
 
 export function AppShell() {
-  const { t } = useTranslation()
-  const { me, workspaces, workspaceId, setWorkspaceId, logout } = useAuth()
-  const navigate = useNavigate()
+  const location = useLocation()
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [drawerFocus, setDrawerFocus] = useState<DrawerFocusSection | null>(null)
+  const showOnboarding = location.pathname.startsWith('/onboarding/')
+  const showSecondary = !showOnboarding && isSecondaryRoute(location.pathname)
+
+  function openMenu(section?: DrawerFocusSection) {
+    setDrawerFocus(section ?? null)
+    setDrawerOpen(true)
+  }
 
   return (
-    <div className="shell">
-      <aside className="sidebar">
-        <div className="logo">Courage Gang AI</div>
-        <nav className="sidebar-nav">
-          {nav.map(({ to, key }) => (
-            <NavLink key={to} to={to} className={({ isActive }) => (isActive ? 'nav-item active' : 'nav-item')}>
-              {t(key)}
-            </NavLink>
-          ))}
-        </nav>
-      </aside>
-      <div className="main-col">
-        <header className="topbar">
-          <div className="context-row">
-            <span className="context-label">{t('context.org')}</span>
-            <span className="context-value">{me?.orgId?.slice(0, 8) ?? '—'}…</span>
-            <span className="context-label">{t('context.workspace')}</span>
-            <select
-              className="select"
-              value={workspaceId ?? ''}
-              onChange={(e) => setWorkspaceId(e.target.value)}
-              disabled={!workspaces.length}
-            >
-              {workspaces.map((w) => (
-                <option key={w.id} value={w.id}>
-                  {w.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <button
-            type="button"
-            className="btn ghost"
-            onClick={async () => {
-              await logout()
-              navigate('/login')
-            }}
-          >
-            {t('auth.logout')}
-          </button>
-        </header>
-        <main className="content">
-          <Outlet />
-        </main>
+    <ChatDrawerProvider>
+      <div className="app-shell">
+        <ToolsOnboardingRedirect />
+        <ChatPage onOpenMenu={openMenu} />
+        <AppNavDrawer
+          open={drawerOpen}
+          focusSection={drawerFocus}
+          onClose={() => {
+            setDrawerOpen(false)
+            setDrawerFocus(null)
+          }}
+        />
+        {showOnboarding && (
+          <ToolsOnboardingPanel>
+            <Outlet />
+          </ToolsOnboardingPanel>
+        )}
+        {showSecondary && (
+          <AppSecondaryPanel titleKey={secondaryRouteTitleKey(location.pathname)}>
+            <Outlet />
+          </AppSecondaryPanel>
+        )}
       </div>
-    </div>
+    </ChatDrawerProvider>
   )
 }

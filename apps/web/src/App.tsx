@@ -5,11 +5,14 @@ import { ProtectedLayout, PublicOnly } from './components/RouteGuards'
 import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
 import { ChatPage } from './pages/ChatPage'
-import { HitlPage } from './pages/HitlPage'
 import { McpMarketplacePage } from './pages/McpMarketplacePage'
 import { McpConnectionsPage } from './pages/McpConnectionsPage'
-import { KnowledgePage } from './pages/KnowledgePage'
+import { ToolsOnboardingPage } from './pages/ToolsOnboardingPage'
 import { ProfilePage } from './pages/ProfilePage'
+import { CreateWorkspacePage } from './pages/CreateWorkspacePage'
+import { CreateOrganizationPage } from './pages/CreateOrganizationPage'
+import { CreateGroupPage } from './pages/CreateGroupPage'
+import { AcceptInvitePage } from './pages/AcceptInvitePage'
 import './i18n'
 import './styles/app.css'
 
@@ -34,15 +37,18 @@ export default function App() {
               </PublicOnly>
             }
           />
+          <Route path="/accept-invite" element={<AcceptInvitePage />} />
           <Route element={<ProtectedLayout />}>
             <Route element={<AppShell />}>
               <Route index element={<Navigate to="/chat" replace />} />
-              <Route path="chat" element={<ChatPage />} />
-              <Route path="hitl" element={<HitlPage />} />
+              <Route path="chat" element={<></>} />
+              <Route path="onboarding/tools" element={<ToolsOnboardingPage />} />
               <Route path="mcp" element={<McpMarketplacePage />} />
               <Route path="connections" element={<McpConnectionsPage />} />
-              <Route path="knowledge" element={<KnowledgePage />} />
               <Route path="profile" element={<ProfilePage />} />
+              <Route path="workspaces/new" element={<CreateWorkspacePage />} />
+              <Route path="organizations/new" element={<CreateOrganizationPage />} />
+              <Route path="groups/new" element={<CreateGroupPage />} />
             </Route>
           </Route>
           <Route path="*" element={<Navigate to="/chat" replace />} />
