@@ -8,6 +8,9 @@ const webNodeModules = path.join(webRoot, 'node_modules')
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    assetsDir: 'web-assets',
+  },
   optimizeDeps: {
     include: [
       'react',
