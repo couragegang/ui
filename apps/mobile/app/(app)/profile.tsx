@@ -5,5 +5,7 @@ import { bffApi } from '../../src/platform/bff'
 
 export default function ProfileRoute() {
   const router = useRouter()
-  return <ProfileScreen api={bffApi} onLogout={() => router.replace('/login')} />
+  return (
+    <ProfileScreen api={bffApi} hideHeader onLogout={() => router.replace('/login')} />
+  )
 }

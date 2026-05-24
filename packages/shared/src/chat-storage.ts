@@ -1,6 +1,9 @@
 import type { KeyValueStorage } from './kv-storage'
 
-const STORAGE_PREFIX = 'chat:lastActive:'
+/** Префикс ключей last-active чата в KV (mobile manifest, web localStorage). */
+export const CHAT_LAST_ACTIVE_PREFIX = 'chat:lastActive:'
+
+const STORAGE_PREFIX = CHAT_LAST_ACTIVE_PREFIX
 
 function storageKey(workspaceId: string): string {
   return `${STORAGE_PREFIX}${workspaceId}`

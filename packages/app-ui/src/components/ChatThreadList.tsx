@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   wrap: {
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.border,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.chatSidebar,
   },
   head: {
     flexDirection: 'row',
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   chip: {
-    backgroundColor: colors.bg,
+    backgroundColor: colors.surface,
     borderRadius: radius.md,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   },
   chipActive: {
     borderColor: colors.primary,
-    backgroundColor: colors.surfaceHover,
+    backgroundColor: colors.accentSoft,
   },
   chipTitle: {
     fontSize: fontSize.sm,

@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
   },
   chip: {
-    backgroundColor: colors.bg,
+    backgroundColor: colors.surface,
     borderRadius: radius.sm,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,

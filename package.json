@@ -5,6 +5,8 @@
   "scripts": {
     "dev:web": "pnpm --filter @couragegang/web dev",
     "dev:mobile": "pnpm --filter @couragegang/mobile start",
+    "build:mobile:preview:android": "pnpm --filter @couragegang/mobile build:preview:android",
+    "build:mobile:preview:ios": "pnpm --filter @couragegang/mobile build:preview:ios",
     "build": "pnpm -r --if-present build",
     "generate:api": "pnpm --filter @couragegang/api-client generate",
     "lint": "pnpm -r --if-present lint"
@@ -14,8 +16,9 @@
   },
   "pnpm": {
     "overrides": {
-      "@types/react": "~19.0.10",
-      "@couragegang/mobile>react-dom": "19.0.0"
+      "react": "19.1.0",
+      "react-dom": "19.1.0",
+      "@types/react": "~19.1.10"
     }
   }
 }

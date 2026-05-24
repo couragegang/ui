@@ -31,7 +31,7 @@ export function ConnectionFormFields({
         const required = field.required && !(isSecret && secretPlaceholder)
         const placeholder = isSecret
           ? secretPlaceholder
-          : localizedLabel(field.placeholder, undefined)
+          : localizedLabel(field.placeholder, field.key)
         return (
           <label key={field.key}>
             {label}

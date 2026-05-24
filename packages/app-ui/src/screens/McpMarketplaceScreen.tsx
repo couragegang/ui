@@ -15,9 +15,10 @@ import { strings } from '../strings'
 export type McpMarketplaceScreenProps = {
   api: BffApi
   onInstalled?: () => void
+  hideHeader?: boolean
 }
 
-export function McpMarketplaceScreen({ api, onInstalled }: McpMarketplaceScreenProps) {
+export function McpMarketplaceScreen({ api, onInstalled, hideHeader }: McpMarketplaceScreenProps) {
   const { workspaceId } = useAuth()
   const [catalog, setCatalog] = useState<McpCatalogItem[]>([])
   const [selected, setSelected] = useState<McpCatalogItem | null>(null)
@@ -51,7 +52,7 @@ export function McpMarketplaceScreen({ api, onInstalled }: McpMarketplaceScreenP
 
   return (
     <Screen>
-      <Text variant="title">{strings.nav.marketplace}</Text>
+      {!hideHeader && <Text variant="title">{strings.nav.mcp}</Text>}
       <Button title={strings.common.refresh} variant="ghost" onPress={() => void load()} loading={loading} />
       <ErrorBanner message={error} />
       {catalog.map((item) => (
@@ -59,7 +60,7 @@ export function McpMarketplaceScreen({ api, onInstalled }: McpMarketplaceScreenP
           <Text style={styles.cardTitle}>{localizedLabel(item.displayName, item.connectorKey)}</Text>
           <Text variant="muted">{item.connectorKey}</Text>
           {item.description ? <Text variant="muted">{item.description}</Text> : null}
-          <Button title={strings.mcp.installBtn} variant="secondary" onPress={() => setSelected(item)} />
+          <Button title={strings.mcp.installBtn} variant="primary" onPress={() => setSelected(item)} />
         </View>
       ))}
       {!loading && catalog.length === 0 && !error && (

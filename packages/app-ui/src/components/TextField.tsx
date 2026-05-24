@@ -24,7 +24,7 @@ export function TextField({
   keyboardType = 'default',
   placeholder,
   editable = true,
-  theme = 'dark',
+  theme = 'light',
 }: TextFieldProps) {
   const pal = themeColors[theme]
   return (

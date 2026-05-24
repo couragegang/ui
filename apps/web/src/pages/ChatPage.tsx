@@ -224,6 +224,9 @@ export function ChatPage({ onOpenMenu }: ChatPageProps) {
       } else if (res.conversationId && res.conversationId !== activeId) {
         await loadThreads()
       }
+      if (res.status === 'error') {
+        setError(res.reply ?? 'error')
+      }
       setMessages((m) => [
         ...m,
         {

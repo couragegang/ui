@@ -3,12 +3,13 @@ import { McpMarketplaceScreen } from '@couragegang/app-ui/screens'
 
 import { bffApi } from '../../src/platform/bff'
 
-export default function MarketplaceRoute() {
+export default function McpRoute() {
   const router = useRouter()
   return (
     <McpMarketplaceScreen
       api={bffApi}
-      onInstalled={() => router.push('/(app)/connections')}
+      hideHeader
+      onInstalled={() => router.push('/connections')}
     />
   )
 }

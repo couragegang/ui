@@ -13,39 +13,6 @@ export type ButtonProps = PressableProps & {
   loading?: boolean
 }
 
-export function Button({
-  title,
-  variant = 'primary',
-  loading,
-  disabled,
-  style,
-  ...rest
-}: ButtonProps) {
-  const isDisabled = disabled || loading
-  return (
-    <Pressable
-      accessibilityRole="button"
-      disabled={isDisabled}
-      style={({ pressed }) => [
-        styles.base,
-        variant === 'primary' && styles.primary,
-        variant === 'secondary' && styles.secondary,
-        variant === 'ghost' && styles.ghost,
-        pressed && !isDisabled && styles.pressed,
-        isDisabled && styles.disabled,
-        style as object,
-      ]}
-      {...rest}
-    >
-      {loading ? (
-        <ActivityIndicator color={colors.text} />
-      ) : (
-        <Text style={[styles.label, variant === 'ghost' && styles.labelGhost]}>{title}</Text>
-      )}
-    </Pressable>
-  )
-}
-
 const styles = StyleSheet.create({
   base: {
     paddingVertical: spacing.sm + 2,
@@ -59,7 +26,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
   },
   secondary: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.bg,
     borderWidth: 1,
     borderColor: colors.border,
   },
@@ -72,12 +39,68 @@ const styles = StyleSheet.create({
   disabled: {
     opacity: 0.5,
   },
-  label: {
-    color: '#fff',
+  labelBase: {
     fontSize: fontSize.md,
     fontWeight: '600',
+  },
+  labelPrimary: {
+    color: '#fff',
+  },
+  labelSecondary: {
+    color: colors.text,
   },
   labelGhost: {
     color: colors.primary,
   },
 })
+
+const variantStyles = {
+  primary: {
+    button: styles.primary,
+    label: styles.labelPrimary,
+    spinner: '#fff',
+  },
+  secondary: {
+    button: styles.secondary,
+    label: styles.labelSecondary,
+    spinner: colors.text,
+  },
+  ghost: {
+    button: styles.ghost,
+    label: styles.labelGhost,
+    spinner: colors.primary,
+  },
+} as const
+
+export function Button({
+  title,
+  variant = 'primary',
+  loading,
+  disabled,
+  style,
+  ...rest
+}: ButtonProps) {
+  const isDisabled = disabled || loading
+  const palette = variantStyles[variant]
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      disabled={isDisabled}
+      style={({ pressed }) => [
+        styles.base,
+        palette.button,
+        pressed && !isDisabled && styles.pressed,
+        isDisabled && styles.disabled,
+        style as object,
+      ]}
+      {...rest}
+    >
+      {loading ? (
+        <ActivityIndicator color={palette.spinner} />
+      ) : (
+        <Text style={[styles.labelBase, palette.label]}>{title}</Text>
+      )}
+    </Pressable>
+  )
+}

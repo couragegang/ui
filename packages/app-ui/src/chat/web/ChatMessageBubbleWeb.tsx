@@ -18,11 +18,17 @@ export function ChatMessageBubbleWeb({ message, onApprove, onReject, hitlBusy }:
     message.pendingApprovalId &&
     !message.hitlResolved
 
+  const isError = message.status === 'error'
   const showStatus =
-    message.status && message.status !== 'completed' && message.status !== 'ok'
+    message.status &&
+    message.status !== 'completed' &&
+    message.status !== 'ok' &&
+    !isError
 
   return (
-    <div className={`chat-row ${isUser ? 'chat-row--user' : 'chat-row--assistant'}`}>
+    <div
+      className={`chat-row ${isUser ? 'chat-row--user' : 'chat-row--assistant'}${isError ? ' chat-row--error' : ''}`}
+    >
       <div className="chat-row-inner">
         {!isUser && (
           <div className="chat-row-avatar" aria-hidden>

@@ -1,6 +1,7 @@
 import { Redirect } from 'expo-router'
 import { View, StyleSheet } from 'react-native'
 import { Text } from '@couragegang/design-system'
+import { colors } from '@couragegang/design-system/tokens'
 import { useAuth } from '@couragegang/app-ui'
 
 export default function Index() {
@@ -18,7 +19,7 @@ export default function Index() {
     return <Redirect href="/login" />
   }
 
-  return <Redirect href="/(app)/chat" />
+  return <Redirect href="/chat" />
 }
 
 const styles = StyleSheet.create({
@@ -26,6 +27,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#0f1419',
+    backgroundColor: colors.bg,
   },
 })

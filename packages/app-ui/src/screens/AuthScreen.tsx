@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { Platform, StyleSheet, View } from 'react-native'
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native'
 import { Button, Text } from '@couragegang/design-system'
 import { spacing } from '@couragegang/design-system/tokens'
 import { ApiError } from '@couragegang/api-client'
@@ -29,6 +29,8 @@ export type AuthScreenProps = {
   hideModeSwitch?: boolean
   /** Скрыть OAuth (если секреты не настроены) */
   showOAuth?: boolean
+  /** Только форма (внутри AuthPageLayout) */
+  embedded?: boolean
 }
 
 function AuthDivider({ theme }: { theme: UiTheme }) {
@@ -51,10 +53,11 @@ export function AuthScreen({
   returnPath = '/chat',
   apiBaseUrl = '/api',
   appOrigin,
-  theme = 'dark',
+  theme = 'light',
   hideTitle = false,
   hideModeSwitch = false,
   showOAuth = true,
+  embedded = false,
 }: AuthScreenProps) {
   const pal = themeColors[theme]
   const isLight = theme === 'light'
@@ -105,80 +108,108 @@ export function AuthScreen({
 
   const title = isLogin ? strings.auth.loginTitle : strings.auth.registerTitle
   const submitLabel = isLogin ? strings.auth.login : strings.auth.register
+  const isNative = Platform.OS !== 'web'
+
+  const form = (
+    <View style={styles.form}>
+      {!hideTitle && (
+        <Text variant="title" style={{ color: pal.text }}>
+          {title}
+        </Text>
+      )}
+
+      {showOAuth && (
+        <>
+          <OAuthProviderButtons
+            mode={mode}
+            returnPath={returnPath}
+            apiBaseUrl={apiBaseUrl}
+            appOrigin={appOrigin}
+          />
+          <AuthDivider theme={theme} />
+        </>
+      )}
+
+      {!isLogin && (
+        <TextField
+          label={strings.auth.displayName}
+          value={displayName}
+          onChangeText={setDisplayName}
+          autoCapitalize="words"
+          theme={theme}
+        />
+      )}
+      <TextField
+        label={strings.auth.email}
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
+        theme={theme}
+      />
+      <TextField
+        label={strings.auth.password}
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+        theme={theme}
+      />
+      {!isLogin && (
+        <TextField
+          label={strings.auth.orgName}
+          value={organizationName}
+          onChangeText={setOrganizationName}
+          autoCapitalize="words"
+          theme={theme}
+        />
+      )}
+      <ErrorBanner message={error} />
+      <Button title={submitLabel} onPress={() => void onSubmit()} loading={loading} />
+
+      {onSwitchMode && !hideModeSwitch && (
+        <View style={styles.footer}>
+          <Text variant="muted" style={{ color: pal.textMuted }}>
+            {isLogin ? strings.auth.noAccount : strings.auth.hasAccount}{' '}
+          </Text>
+          <Text style={[styles.link, isLight && styles.linkLight]} onPress={onSwitchMode}>
+            {isLogin ? strings.auth.toRegister : strings.auth.toLogin}
+          </Text>
+        </View>
+      )}
+    </View>
+  )
+
+  if (embedded) {
+    return form
+  }
+
+  const screen = (
+    <Screen
+      fill={isNative || !isLight}
+      padded={isNative}
+      scroll={isNative}
+      safeArea={isNative}
+      keyboardDismiss={isNative}
+      backgroundColor={pal.bg}
+    >
+      {form}
+    </Screen>
+  )
+
+  if (!isNative) return screen
 
   return (
-    <Screen fill={!isLight} padded={false} backgroundColor={pal.bg} scroll={false}>
-      <View style={styles.form}>
-        {!hideTitle && (
-          <Text variant="title" style={{ color: pal.text }}>
-            {title}
-          </Text>
-        )}
-
-        {showOAuth && (
-          <>
-            <OAuthProviderButtons
-              mode={mode}
-              returnPath={returnPath}
-              apiBaseUrl={apiBaseUrl}
-              appOrigin={appOrigin}
-            />
-            <AuthDivider theme={theme} />
-          </>
-        )}
-
-        {!isLogin && (
-          <TextField
-            label={strings.auth.displayName}
-            value={displayName}
-            onChangeText={setDisplayName}
-            autoCapitalize="words"
-            theme={theme}
-          />
-        )}
-        <TextField
-          label={strings.auth.email}
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          theme={theme}
-        />
-        <TextField
-          label={strings.auth.password}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          theme={theme}
-        />
-        {!isLogin && (
-          <TextField
-            label={strings.auth.orgName}
-            value={organizationName}
-            onChangeText={setOrganizationName}
-            autoCapitalize="words"
-            theme={theme}
-          />
-        )}
-        <ErrorBanner message={error} />
-        <Button title={submitLabel} onPress={() => void onSubmit()} loading={loading} />
-
-        {onSwitchMode && !hideModeSwitch && (
-          <View style={styles.footer}>
-            <Text variant="muted" style={{ color: pal.textMuted }}>
-              {isLogin ? strings.auth.noAccount : strings.auth.hasAccount}{' '}
-            </Text>
-            <Text style={[styles.link, isLight && styles.linkLight]} onPress={onSwitchMode}>
-              {isLogin ? strings.auth.toRegister : strings.auth.toLogin}
-            </Text>
-          </View>
-        )}
-      </View>
-    </Screen>
+    <KeyboardAvoidingView
+      style={[styles.nativeRoot, { backgroundColor: pal.bg }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      {screen}
+    </KeyboardAvoidingView>
   )
 }
 
 const styles = StyleSheet.create({
+  nativeRoot: { flex: 1 },
   form: { gap: spacing.md },
   dividerRow: { flexDirection: 'row', alignItems: 'center', marginVertical: spacing.xs },
   dividerLine: { flex: 1, height: StyleSheet.hairlineWidth },

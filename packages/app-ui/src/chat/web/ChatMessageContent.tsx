@@ -1,26 +1,19 @@
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
+import { prepareChatMarkdownBody } from '../message-content'
+
 type Props = {
   content: string
 }
 
-function normalizeContent(text: string): string {
-  return text.replace(/\\n/g, '\n')
-}
-
-function linkifyNotionUrls(text: string): string {
-  return text.replace(
-    /(https:\/\/(?:www\.)?notion\.so\/[^\s)\]]+)/gi,
-    (url) => `[Открыть в Notion](${url})`,
-  )
-}
+const MarkdownWrap = 'div' as const
 
 export function ChatMessageContent({ content }: Props) {
-  const body = linkifyNotionUrls(normalizeContent(content))
+  const body = prepareChatMarkdownBody(content)
 
   return (
-    <div className="chat-markdown">
+    <MarkdownWrap className="chat-markdown">
       <Markdown
         remarkPlugins={[remarkGfm]}
         components={{
@@ -33,6 +26,6 @@ export function ChatMessageContent({ content }: Props) {
       >
         {body}
       </Markdown>
-    </div>
+    </MarkdownWrap>
   )
 }

@@ -7,6 +7,8 @@ import type { ChatDrawerBridgeState } from '../chat-drawer-bridge'
 export type ChatScreenProps = {
   api: BffApi
   chatStorage: ChatStorage
+  /** Native: кроватка поднимается над клавиатурой */
+  keyboardOpen?: boolean
   /** Web: синхронизация тредов с AppNavDrawer */
   onDrawerState?: (state: ChatDrawerBridgeState | null) => void
   /** Web: футер сайдбара (ChatContextFooter) */

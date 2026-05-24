@@ -29,6 +29,10 @@ export default defineConfig({
       react: path.join(webNodeModules, 'react'),
       'react-dom': path.join(webNodeModules, 'react-dom'),
       'react-native': path.join(webNodeModules, 'react-native-web'),
+      'react-native-safe-area-context': path.resolve(
+        __dirname,
+        'src/platform/react-native-safe-area-context.tsx',
+      ),
       '@couragegang/shared': path.resolve(__dirname, '../../packages/shared/src'),
       '@couragegang/shared/chat-storage': path.resolve(
         __dirname,

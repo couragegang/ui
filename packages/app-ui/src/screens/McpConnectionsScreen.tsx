@@ -16,9 +16,11 @@ import { strings } from '../strings'
 export type McpConnectionsScreenProps = {
   api: BffApi
   onAddMore?: () => void
+  /** Внутри AppSecondaryPanel — без дублирующего заголовка */
+  hideHeader?: boolean
 }
 
-export function McpConnectionsScreen({ api, onAddMore }: McpConnectionsScreenProps) {
+export function McpConnectionsScreen({ api, onAddMore, hideHeader }: McpConnectionsScreenProps) {
   const { workspaceId } = useAuth()
   const { items, loading, error, reload } = useWorkspaceInstallations(api, workspaceId)
   const [busyId, setBusyId] = useState<string | null>(null)
@@ -79,14 +81,19 @@ export function McpConnectionsScreen({ api, onAddMore }: McpConnectionsScreenPro
 
   return (
     <Screen>
-      <View style={styles.head}>
-        <Text variant="title" style={styles.flex}>
-          {strings.connections.title}
-        </Text>
-        {onAddMore && (
-          <Button title={strings.connections.addMore} variant="secondary" onPress={onAddMore} />
-        )}
-      </View>
+      {!hideHeader && (
+        <View style={styles.head}>
+          <Text variant="title" style={styles.flex}>
+            {strings.connections.title}
+          </Text>
+          {onAddMore && (
+            <Button title={strings.connections.addMore} variant="secondary" onPress={onAddMore} />
+          )}
+        </View>
+      )}
+      {hideHeader && onAddMore && (
+        <Button title={strings.connections.addMore} variant="secondary" onPress={onAddMore} />
+      )}
       <Button title={strings.common.refresh} variant="ghost" onPress={() => void reload()} loading={loading} />
       <ErrorBanner message={error} />
       {message ? <Text style={styles.ok}>{message}</Text> : null}

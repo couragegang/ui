@@ -1,8 +1,4 @@
-import { ChatScreen } from '@couragegang/app-ui/screens'
-
-import { bffApi } from '../../src/platform/bff'
-import { chatStorage } from '../../src/platform/chat-storage'
-
+/** Чат рендерится в AppChrome; маршрут нужен для /chat. */
 export default function ChatRoute() {
-  return <ChatScreen api={bffApi} chatStorage={chatStorage} />
+  return null
 }

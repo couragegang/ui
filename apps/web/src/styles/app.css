@@ -1360,6 +1360,11 @@ textarea {
   padding-top: 4px;
 }
 
+.chat-row--error .chat-row-content {
+  border-left: 3px solid var(--color-danger, #ef4444);
+  padding-left: 12px;
+}
+
 .chat-row--typing .chat-row-content {
   padding-top: 10px;
 }

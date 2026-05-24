@@ -1,5 +1,7 @@
 export { AuthScreen } from './AuthScreen'
 export type { AuthScreenProps } from './AuthScreen'
+export { AuthPage } from './AuthPage'
+export type { AuthPageProps } from './AuthPage'
 export { LoginScreen } from './LoginScreen'
 export { RegisterScreen } from './RegisterScreen'
 export { ChatScreen } from './ChatScreen'

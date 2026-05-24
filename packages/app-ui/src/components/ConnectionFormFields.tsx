@@ -55,7 +55,7 @@ export function ConnectionFormFields({
             value={values[field.key] ?? ''}
             onChangeText={(v) => onChange(field.key, v)}
             secureTextEntry={isSecret}
-            placeholder={isSecret ? secretPlaceholder : localizedLabel(field.placeholder, undefined)}
+            placeholder={isSecret ? secretPlaceholder : localizedLabel(field.placeholder, field.key)}
             editable={!disabled}
           />
         )

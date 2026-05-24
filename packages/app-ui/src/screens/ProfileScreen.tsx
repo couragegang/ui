@@ -21,9 +21,10 @@ export type ProfileScreenProps = {
   onLogout?: () => void
   /** Базовый URL для ссылок приглашений (web: origin) */
   publicBaseUrl?: string
+  hideHeader?: boolean
 }
 
-export function ProfileScreen({ api, onLogout, publicBaseUrl }: ProfileScreenProps) {
+export function ProfileScreen({ api, onLogout, publicBaseUrl, hideHeader }: ProfileScreenProps) {
   const auth = useAuth()
   const [displayName, setDisplayName] = useState('')
   const [orgName, setOrgName] = useState('')
@@ -94,7 +95,7 @@ export function ProfileScreen({ api, onLogout, publicBaseUrl }: ProfileScreenPro
 
   return (
     <Screen>
-      <Text variant="title">{strings.profile.title}</Text>
+      {!hideHeader && <Text variant="title">{strings.profile.title}</Text>}
       <Button title={strings.common.refresh} variant="ghost" onPress={() => void load()} loading={busy} />
       <ErrorBanner message={error} />
       {message ? <Text style={styles.ok}>{message}</Text> : null}

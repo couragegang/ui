@@ -171,6 +171,9 @@ export function useChat({ api, workspaceId, userId, chatStorage, strings }: UseC
       if (res.conversationTitle || (res.conversationId && res.conversationId !== activeId)) {
         await loadThreads()
       }
+      if (res.status === 'error') {
+        setError(res.reply ?? 'error')
+      }
       setMessages((m) => [
         ...m,
         {

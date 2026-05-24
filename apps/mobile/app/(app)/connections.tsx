@@ -5,5 +5,7 @@ import { bffApi } from '../../src/platform/bff'
 
 export default function ConnectionsRoute() {
   const router = useRouter()
-  return <McpConnectionsScreen api={bffApi} onAddMore={() => router.push('/(app)/marketplace')} />
+  return (
+    <McpConnectionsScreen api={bffApi} hideHeader onAddMore={() => router.push('/mcp')} />
+  )
 }

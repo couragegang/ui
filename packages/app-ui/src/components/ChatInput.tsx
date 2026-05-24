@@ -8,16 +8,18 @@ export type ChatInputProps = {
   value: string
   onChangeText: (v: string) => void
   onSend: () => void
+  onFocus?: () => void
   disabled?: boolean
 }
 
-export function ChatInput({ value, onChangeText, onSend, disabled }: ChatInputProps) {
+export function ChatInput({ value, onChangeText, onSend, onFocus, disabled }: ChatInputProps) {
   return (
     <View style={styles.dock}>
       <TextInput
         style={styles.input}
         value={value}
         onChangeText={onChangeText}
+        onFocus={onFocus}
         placeholder={strings.chat.placeholder}
         placeholderTextColor={colors.textMuted}
         multiline
@@ -36,13 +38,13 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: colors.border,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.chatMain,
   },
   input: {
     flex: 1,
     minHeight: 44,
     maxHeight: 120,
-    backgroundColor: colors.bg,
+    backgroundColor: colors.surface,
     borderRadius: radius.md,
     borderWidth: 1,
     borderColor: colors.border,

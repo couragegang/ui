@@ -1,13 +1,16 @@
-/** Дизайн-токены (web + native). */
+/** Дизайн-токены (web app.css + native). Светлая тема по умолчанию. */
 export const colors = {
-  bg: '#0f1419',
-  surface: '#1a2332',
-  surfaceHover: '#243044',
-  border: '#2d3a4f',
-  text: '#e8edf4',
-  textMuted: '#8b9cb3',
-  primary: '#3b82f6',
-  primaryHover: '#2563eb',
+  bg: '#f9fafb',
+  surface: '#ffffff',
+  surfaceHover: '#f3f4f6',
+  border: '#e5e7eb',
+  text: '#111827',
+  textMuted: '#6b7280',
+  primary: '#4d6bfe',
+  primaryHover: '#3d5ae0',
+  accentSoft: '#eef2ff',
+  chatSidebar: '#f3f4f6',
+  chatMain: '#ffffff',
   danger: '#ef4444',
   success: '#22c55e',
 } as const
