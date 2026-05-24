@@ -25,9 +25,9 @@ npm run build   # → dist/
 | **`test`** | staging `https://ai-test.valoriel.ru` |
 | **`main`** | prod `https://ai.valoriel.ru` |
 
-Push в `test` / `main` → workflow **`trigger-deploy.yml`** → reusable **`couragegang/platform`** → **`deploy-web-ui.yml`** → `rsync dist/` на VPS.
+Push в `test` / `main` → workflow **`deploy.yml`** (build + rsync на VPS).
 
-Секреты **`VPS_HOST`**, **`VPS_USER`**, **`VPS_SSH_KEY`** — GitHub Environments **`test`** / **`prod`** в репозитории **platform** (те же, что для `deploy-vps`).
+Секреты **`VPS_HOST`**, **`VPS_USER`**, **`VPS_SSH_KEY`** — GitHub Environments **`test`** / **`prod`** в **этом репозитории** (те же значения, что в platform).
 
 Ручной деплой: `../platform/scripts/deploy-web-ui.sh test|prod user@vps`.
 
