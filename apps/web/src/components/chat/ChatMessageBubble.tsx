@@ -12,9 +12,10 @@ type Props = {
 export function ChatMessageBubble({ message, onApprove, onReject, hitlBusy }: Props) {
   const { t } = useTranslation()
   const isUser = message.role === 'user'
+  const isPlanApproval = message.status === 'awaiting_plan_approval'
   const awaiting =
     message.role === 'assistant' &&
-    message.status === 'awaiting_approval' &&
+    (message.status === 'awaiting_approval' || isPlanApproval) &&
     message.pendingApprovalId &&
     !message.hitlResolved
 
@@ -56,7 +57,7 @@ export function ChatMessageBubble({ message, onApprove, onReject, hitlBusy }: Pr
                   disabled={hitlBusy}
                   onClick={onApprove}
                 >
-                  {t('chat.approve')}
+                  {isPlanApproval ? t('chat.approvePlan', { defaultValue: 'Подтвердить план' }) : t('chat.approve')}
                 </button>
                 <button
                   type="button"

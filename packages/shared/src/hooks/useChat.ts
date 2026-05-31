@@ -218,14 +218,17 @@ export function useChat({ api, workspaceId, userId, chatStorage, strings }: UseC
         }
         const priorUser = [...messages].slice(0, index).reverse().find((m) => m.role === 'user')
         const retryMessage = priorUser?.content ?? msg.content
-        const toolName = msg.toolName ?? 'notion_write_page'
-        const connectorKey = msg.connectorKey ?? 'notion'
         setLoading(true)
+        const isPlanApproval = msg.status === 'awaiting_plan_approval'
         const res = (await api.chat({
           message: retryMessage,
           conversationId: activeId,
-          toolName,
-          connectorKey,
+          ...(isPlanApproval
+            ? {}
+            : {
+                toolName: msg.toolName ?? 'notion_write_page',
+                connectorKey: msg.connectorKey ?? 'notion',
+              }),
           approvedPendingApprovalId: msg.pendingApprovalId,
         } as Record<string, unknown>)) as ChatResponse
         setMessages((m) => [
@@ -235,8 +238,8 @@ export function useChat({ api, workspaceId, userId, chatStorage, strings }: UseC
             content: res.reply ?? toolDoneEmpty,
             status: res.status,
             pendingApprovalId: res.pendingApprovalId,
-            toolName,
-            connectorKey,
+            toolName: isPlanApproval ? res.toolName : (msg.toolName ?? res.toolName),
+            connectorKey: isPlanApproval ? res.connectorKey : (msg.connectorKey ?? res.connectorKey),
           },
         ])
       } catch (err) {

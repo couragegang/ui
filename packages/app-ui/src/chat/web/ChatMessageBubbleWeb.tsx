@@ -12,9 +12,10 @@ type Props = {
 
 export function ChatMessageBubbleWeb({ message, onApprove, onReject, hitlBusy }: Props) {
   const isUser = message.role === 'user'
+  const isPlanApproval = message.status === 'awaiting_plan_approval'
   const awaiting =
     message.role === 'assistant' &&
-    message.status === 'awaiting_approval' &&
+    (message.status === 'awaiting_approval' || isPlanApproval) &&
     message.pendingApprovalId &&
     !message.hitlResolved
 
@@ -56,7 +57,7 @@ export function ChatMessageBubbleWeb({ message, onApprove, onReject, hitlBusy }:
                   disabled={hitlBusy}
                   onClick={onApprove}
                 >
-                  {strings.chat.approve}
+                  {isPlanApproval ? strings.chat.approvePlan : strings.chat.approve}
                 </button>
                 <button
                   type="button"

@@ -33,10 +33,14 @@ export const ChatMessageList = forwardRef<ScrollView, ChatMessageListProps>(func
           message={m}
           hitlBusy={hitlBusy}
           onApprove={
-            m.status === 'awaiting_approval' ? () => onApprove?.(i) : undefined
+            m.status === 'awaiting_approval' || m.status === 'awaiting_plan_approval'
+              ? () => onApprove?.(i)
+              : undefined
           }
           onReject={
-            m.status === 'awaiting_approval' ? () => onReject?.(i) : undefined
+            m.status === 'awaiting_approval' || m.status === 'awaiting_plan_approval'
+              ? () => onReject?.(i)
+              : undefined
           }
         />
       ))}

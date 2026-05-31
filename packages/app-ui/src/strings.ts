@@ -79,6 +79,7 @@ export const strings = {
     archive: 'В архив',
     delete: 'Удалить',
     approve: 'Подтвердить',
+    approvePlan: 'Подтвердить план',
     reject: 'Отклонить',
     deleteConfirm: 'Удалить этот чат безвозвратно?',
     hitlPrompt: 'Для выполнения действия нужно ваше подтверждение:',

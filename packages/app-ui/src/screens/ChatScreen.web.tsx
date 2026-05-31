@@ -148,12 +148,12 @@ export function ChatScreen({ api, chatStorage, onDrawerState, sidebarFooter }: C
                   message={m}
                   hitlBusy={hitlBusy}
                   onApprove={
-                    m.status === 'awaiting_approval'
+                    m.status === 'awaiting_approval' || m.status === 'awaiting_plan_approval'
                       ? () => void onHitlDecision(i, 'approve')
                       : undefined
                   }
                   onReject={
-                    m.status === 'awaiting_approval'
+                    m.status === 'awaiting_approval' || m.status === 'awaiting_plan_approval'
                       ? () => void onHitlDecision(i, 'reject')
                       : undefined
                   }

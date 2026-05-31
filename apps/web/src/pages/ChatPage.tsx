@@ -353,10 +353,14 @@ export function ChatPage({ onOpenMenu }: ChatPageProps) {
                   message={m}
                   hitlBusy={hitlBusy}
                   onApprove={
-                    m.status === 'awaiting_approval' ? () => void onHitlDecision(i, 'approve') : undefined
+                    m.status === 'awaiting_approval' || m.status === 'awaiting_plan_approval'
+                      ? () => void onHitlDecision(i, 'approve')
+                      : undefined
                   }
                   onReject={
-                    m.status === 'awaiting_approval' ? () => void onHitlDecision(i, 'reject') : undefined
+                    m.status === 'awaiting_approval' || m.status === 'awaiting_plan_approval'
+                      ? () => void onHitlDecision(i, 'reject')
+                      : undefined
                   }
                 />
               ))}
