@@ -6,7 +6,7 @@ export function normalizeChatContent(text: string): string {
 /** Plain Notion URLs → markdown-ссылки для заметного клика. */
 export function linkifyNotionUrls(text: string): string {
   return text.replace(
-    /(https:\/\/(?:www\.)?notion\.so\/[^\s)\]]+)/gi,
+    /(https:\/\/(?:[\w-]+\.)*notion\.(?:so|site)\/[^\s)\]]+)/gi,
     (url) => `[Открыть в Notion](${url})`,
   )
 }
