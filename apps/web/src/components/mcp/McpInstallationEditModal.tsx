@@ -11,6 +11,7 @@ import {
 import { ApiError, fetchInstallation, updateInstallation } from '../../lib/api'
 import { ConnectionFormFields } from './ConnectionFormFields'
 import { NotionTargetPicker } from './NotionTargetPicker'
+import { TrelloBoardPicker } from './TrelloBoardPicker'
 
 type Props = {
   workspaceId: string
@@ -121,6 +122,18 @@ export function McpInstallationEditModal({ workspaceId, installation, onClose, o
                 value={formValues.default_database_id ?? ''}
                 onChange={(id) =>
                   setFormValues((prev) => ({ ...prev, default_database_id: id }))
+                }
+                disabled={submitting}
+              />
+            )}
+            {installation.connectorKey === 'trello' && (
+              <TrelloBoardPicker
+                workspaceId={workspaceId}
+                apiKey={formValues.api_key ?? ''}
+                token={formValues.token ?? ''}
+                value={formValues.default_board_name ?? ''}
+                onChange={(name) =>
+                  setFormValues((prev) => ({ ...prev, default_board_name: name }))
                 }
                 disabled={submitting}
               />

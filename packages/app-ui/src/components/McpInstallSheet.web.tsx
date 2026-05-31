@@ -14,6 +14,7 @@ import type { McpCatalogItem, PolicyTemplatePack } from '@couragegang/shared/typ
 import { ConnectionFormFields } from './ConnectionFormFields.web'
 import { ModalSheet } from './ModalSheet.web'
 import { NotionTargetPicker } from './NotionTargetPicker.web'
+import { TrelloBoardPicker } from './TrelloBoardPicker.web'
 import { useAuth } from '../context/AuthProvider'
 import { strings } from '../strings'
 
@@ -161,6 +162,20 @@ export function McpInstallSheet({ api, item, visible, onClose, onInstalled }: Mc
               value={formValues.default_database_id ?? ''}
               onChange={(id) =>
                 setFormValues((prev) => ({ ...prev, default_database_id: id }))
+              }
+              disabled={submitting}
+            />
+          ) : null}
+
+          {detail.connectorKey === 'trello' && workspaceId ? (
+            <TrelloBoardPicker
+              api={api}
+              workspaceId={workspaceId}
+              apiKey={formValues.api_key ?? ''}
+              token={formValues.token ?? ''}
+              value={formValues.default_board_name ?? ''}
+              onChange={(name) =>
+                setFormValues((prev) => ({ ...prev, default_board_name: name }))
               }
               disabled={submitting}
             />

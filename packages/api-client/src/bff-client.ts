@@ -302,6 +302,20 @@ export function createBffApi(config: HttpClientConfig) {
 
       ),
 
+    discoverTrello: async (workspaceId: string, apiKey: string, token: string) =>
+
+      http.parseJson(
+
+        await http.request(`/mcp/workspaces/${workspaceId}/trello/discover`, {
+
+          method: 'POST',
+
+          body: JSON.stringify({ apiKey, token }),
+
+        }),
+
+      ),
+
     conversations: async (includeArchived = false) => {
 
       const q = includeArchived ? '?include_archived=true' : ''

@@ -118,6 +118,11 @@ export const strings = {
     notionNoDatabases: 'Базы не найдены',
     notionSelectDatabase: 'Выберите базу',
     notionAutoIfEmpty: 'Если не выбрать — будет использована первая доступная база.',
+    trelloPickBoard: 'Доска Trello',
+    trelloLoadingBoards: 'Загрузка досок…',
+    trelloNoBoards: 'Доски не найдены',
+    trelloSelectBoard: 'Выберите доску',
+    trelloAutoIfEmpty: 'Если не выбрать — будет использована первая доступная доска.',
   },
   profile: {
     title: 'Профиль',

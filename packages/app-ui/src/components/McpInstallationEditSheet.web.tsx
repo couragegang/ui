@@ -11,6 +11,7 @@ import type { ConnectionFormSchema, McpInstallation } from '@couragegang/shared/
 import { ConnectionFormFields } from './ConnectionFormFields.web'
 import { ModalSheet } from './ModalSheet.web'
 import { NotionTargetPicker } from './NotionTargetPicker.web'
+import { TrelloBoardPicker } from './TrelloBoardPicker.web'
 import { strings } from '../strings'
 
 export type McpInstallationEditSheetProps = {
@@ -130,6 +131,19 @@ export function McpInstallationEditSheet({
               value={formValues.default_database_id ?? ''}
               onChange={(id) =>
                 setFormValues((prev) => ({ ...prev, default_database_id: id }))
+              }
+              disabled={submitting}
+            />
+          )}
+          {installation.connectorKey === 'trello' && (
+            <TrelloBoardPicker
+              api={api}
+              workspaceId={workspaceId}
+              apiKey={formValues.api_key ?? ''}
+              token={formValues.token ?? ''}
+              value={formValues.default_board_name ?? ''}
+              onChange={(name) =>
+                setFormValues((prev) => ({ ...prev, default_board_name: name }))
               }
               disabled={submitting}
             />

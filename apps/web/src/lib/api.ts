@@ -188,6 +188,12 @@ export async function discoverNotionDatabases(workspaceId: string, integrationTo
   }>
 }
 
+export async function discoverTrelloBoards(workspaceId: string, apiKey: string, token: string) {
+  return bffApi.discoverTrello(workspaceId, apiKey, token) as Promise<{
+    items: NotionResourceItem[]
+  }>
+}
+
 export type SendChatPayload = {
   message: string
   conversationId?: string
