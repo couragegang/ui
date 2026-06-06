@@ -1500,6 +1500,18 @@ textarea {
   margin-bottom: 6px;
 }
 
+.chat-message-time {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 6px;
+  line-height: 1.2;
+}
+
+.chat-row--user .chat-message-time {
+  text-align: right;
+}
+
 .chat-markdown {
   font-size: 15px;
   line-height: 1.6;

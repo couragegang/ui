@@ -1,4 +1,5 @@
 import type { ChatMessage } from '@couragegang/shared/types'
+import { formatMessageTimestamp } from '@couragegang/shared/format-message-time'
 
 import { strings } from '../../strings'
 import { ChatMessageContent } from './ChatMessageContent'
@@ -24,7 +25,10 @@ export function ChatMessageBubbleWeb({ message, onApprove, onReject, hitlBusy }:
     message.status &&
     message.status !== 'completed' &&
     message.status !== 'ok' &&
-    !isError
+    !isError &&
+    !message.hitlResolved
+
+  const timeLabel = formatMessageTimestamp(message.createdAt)
 
   return (
     <div
@@ -75,6 +79,11 @@ export function ChatMessageBubbleWeb({ message, onApprove, onReject, hitlBusy }:
           )}
           {message.hitlResolved === 'rejected' && (
             <p className="muted">{strings.chat.hitlRejected}</p>
+          )}
+          {timeLabel && (
+            <time className="chat-message-time" dateTime={message.createdAt}>
+              {timeLabel}
+            </time>
           )}
         </div>
       </div>

@@ -404,6 +404,13 @@ export function createBffApi(config: HttpClientConfig) {
         }),
       ),
 
+    getPendingApproval: async (id: string) =>
+      http.parseJson(
+        await http.request(`/policy/pending-approvals/${id}`, {
+          method: 'GET',
+        }),
+      ),
+
   }
 
 }

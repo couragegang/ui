@@ -3,6 +3,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { ApiError, type BffApi } from '@couragegang/api-client'
 
 import type { ChatStorage } from '../chat-storage'
+import { reconcileHitlWithPolicy } from '../reconcile-hitl-messages'
+import { messageTimestampNow } from '../format-message-time'
 import type { ChatMessage, ChatResponse, Conversation } from '../types'
 
 export type UseChatConfig = {
@@ -26,6 +28,7 @@ function mapApiMessage(m: ChatMessage): ChatMessage {
     toolName: m.toolName,
     connectorKey: m.connectorKey,
     hitlResolved: m.hitlResolved,
+    createdAt: m.createdAt,
   }
 }
 
@@ -76,7 +79,11 @@ export function useChat({ api, workspaceId, userId, chatStorage, strings }: UseC
   const loadMessages = useCallback(
     async (conversationId: string) => {
       const res = (await api.conversationMessages(conversationId)) as { items?: ChatMessage[] }
-      setMessages((res.items ?? []).map(mapApiMessage))
+      const raw = (res.items ?? []).map(mapApiMessage)
+      const reconciled = await reconcileHitlWithPolicy(raw, (id) =>
+        api.getPendingApproval(id) as Promise<{ status?: string }>,
+      )
+      setMessages(reconciled)
     },
     [api],
   )
@@ -155,7 +162,7 @@ export function useChat({ api, workspaceId, userId, chatStorage, strings }: UseC
     const userMsg = input.trim()
     setInput('')
     setError('')
-    setMessages((m) => [...m, { role: 'user', content: userMsg }])
+    setMessages((m) => [...m, { role: 'user', content: userMsg, createdAt: messageTimestampNow() }])
     setLoading(true)
     try {
       let conversationId = activeId ?? undefined
@@ -183,6 +190,7 @@ export function useChat({ api, workspaceId, userId, chatStorage, strings }: UseC
           pendingApprovalId: res.pendingApprovalId,
           toolName: res.toolName,
           connectorKey: res.connectorKey,
+          createdAt: messageTimestampNow(),
         },
       ])
     } catch (err) {
@@ -212,7 +220,7 @@ export function useChat({ api, workspaceId, userId, chatStorage, strings }: UseC
         if (action === 'reject') {
           setMessages((m) => [
             ...m,
-            { role: 'assistant', content: hitlRejected, status: 'completed' },
+            { role: 'assistant', content: hitlRejected, status: 'completed', createdAt: messageTimestampNow() },
           ])
           return
         }
@@ -240,12 +248,13 @@ export function useChat({ api, workspaceId, userId, chatStorage, strings }: UseC
             pendingApprovalId: res.pendingApprovalId,
             toolName: isPlanApproval ? res.toolName : (msg.toolName ?? res.toolName),
             connectorKey: isPlanApproval ? res.connectorKey : (msg.connectorKey ?? res.connectorKey),
+            createdAt: messageTimestampNow(),
           },
         ])
       } catch (err) {
         const errText = err instanceof ApiError ? (err.body ?? err.message) : String(err)
         setError(errText)
-        setMessages((m) => [...m, { role: 'assistant', content: errText, status: 'error' }])
+        setMessages((m) => [...m, { role: 'assistant', content: errText, status: 'error', createdAt: messageTimestampNow() }])
       } finally {
         setHitlBusy(false)
         setLoading(false)

@@ -234,6 +234,10 @@ export async function rejectPending(id: string, userId: string) {
   return bffApi.rejectPending(id, userId)
 }
 
+export async function getPendingApproval(id: string) {
+  return bffApi.getPendingApproval(id) as Promise<PendingApproval>
+}
+
 export async function installConnector(workspaceId: string, body: McpInstallRequest) {
   return bffApi.installMcp(workspaceId, body as unknown as Record<string, unknown>)
 }

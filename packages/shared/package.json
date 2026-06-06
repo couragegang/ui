@@ -11,7 +11,9 @@
     "./mcp": "./src/mcp.ts",
     "./chat-storage": "./src/chat-storage.ts",
     "./permissions": "./src/permissions.ts",
-    "./slug": "./src/slug.ts"
+    "./slug": "./src/slug.ts",
+    "./reconcile-hitl-messages": "./src/reconcile-hitl-messages.ts",
+    "./format-message-time": "./src/format-message-time.ts"
   },
   "dependencies": {
     "@couragegang/api-client": "workspace:*"

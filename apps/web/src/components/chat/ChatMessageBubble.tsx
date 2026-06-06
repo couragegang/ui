@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import type { ChatMessage } from '@couragegang/shared/types'
+import { formatMessageTimestamp } from '@couragegang/shared/format-message-time'
 import { ChatMessageContent } from './ChatMessageContent'
 
 type Props = {
@@ -10,7 +11,7 @@ type Props = {
 }
 
 export function ChatMessageBubble({ message, onApprove, onReject, hitlBusy }: Props) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const isUser = message.role === 'user'
   const isPlanApproval = message.status === 'awaiting_plan_approval'
   const awaiting =
@@ -24,7 +25,10 @@ export function ChatMessageBubble({ message, onApprove, onReject, hitlBusy }: Pr
     message.status &&
     message.status !== 'completed' &&
     message.status !== 'ok' &&
-    !isError
+    !isError &&
+    !message.hitlResolved
+
+  const timeLabel = formatMessageTimestamp(message.createdAt, i18n.language)
 
   return (
     <div
@@ -75,6 +79,11 @@ export function ChatMessageBubble({ message, onApprove, onReject, hitlBusy }: Pr
           )}
           {message.hitlResolved === 'rejected' && (
             <p className="muted">{t('chat.hitlRejected')}</p>
+          )}
+          {timeLabel && (
+            <time className="chat-message-time" dateTime={message.createdAt}>
+              {timeLabel}
+            </time>
           )}
         </div>
       </div>

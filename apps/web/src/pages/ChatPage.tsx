@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ChatMessage, Conversation } from '@couragegang/shared/types'
+import { messageTimestampNow } from '@couragegang/shared/format-message-time'
+import { reconcileHitlWithPolicy } from '@couragegang/shared/reconcile-hitl-messages'
 import { useAuth } from '../context/AuthContext'
 import {
   ApiError,
@@ -10,6 +12,7 @@ import {
   deleteConversation,
   fetchConversationMessages,
   fetchConversations,
+  getPendingApproval,
   rejectPending,
   sendChat,
 } from '../lib/api'
@@ -35,6 +38,8 @@ function mapApiMessage(m: ChatMessage): ChatMessage {
     pendingApprovalId: m.pendingApprovalId,
     toolName: m.toolName,
     connectorKey: m.connectorKey,
+    hitlResolved: m.hitlResolved,
+    createdAt: m.createdAt,
   }
 }
 
@@ -90,7 +95,9 @@ export function ChatPage({ onOpenMenu }: ChatPageProps) {
   const loadMessages = useCallback(
     async (conversationId: string) => {
       const res = await fetchConversationMessages(conversationId)
-      setMessages((res.items ?? []).map(mapApiMessage))
+      const raw = (res.items ?? []).map(mapApiMessage)
+      const reconciled = await reconcileHitlWithPolicy(raw, (id) => getPendingApproval(id))
+      setMessages(reconciled)
     },
     [],
   )
@@ -209,7 +216,7 @@ export function ChatPage({ onOpenMenu }: ChatPageProps) {
     const userMsg = input.trim()
     setInput('')
     setError('')
-    setMessages((m) => [...m, { role: 'user', content: userMsg }])
+    setMessages((m) => [...m, { role: 'user', content: userMsg, createdAt: messageTimestampNow() }])
     setLoading(true)
     try {
       let conversationId = activeId ?? undefined
@@ -236,6 +243,7 @@ export function ChatPage({ onOpenMenu }: ChatPageProps) {
           pendingApprovalId: res.pendingApprovalId,
           toolName: res.toolName,
           connectorKey: res.connectorKey,
+          createdAt: messageTimestampNow(),
         },
       ])
     } catch (err) {
@@ -264,7 +272,7 @@ export function ChatPage({ onOpenMenu }: ChatPageProps) {
       if (action === 'reject') {
         setMessages((m) => [
           ...m,
-          { role: 'assistant', content: t('chat.hitlRejected'), status: 'completed' },
+          { role: 'assistant', content: t('chat.hitlRejected'), status: 'completed', createdAt: messageTimestampNow() },
         ])
         return
       }
@@ -289,12 +297,13 @@ export function ChatPage({ onOpenMenu }: ChatPageProps) {
           pendingApprovalId: res.pendingApprovalId,
           toolName,
           connectorKey,
+          createdAt: messageTimestampNow(),
         },
       ])
     } catch (err) {
       const errText = err instanceof ApiError ? err.body ?? err.message : String(err)
       setError(errText)
-      setMessages((m) => [...m, { role: 'assistant', content: errText, status: 'error' }])
+      setMessages((m) => [...m, { role: 'assistant', content: errText, status: 'error', createdAt: messageTimestampNow() }])
     } finally {
       setHitlBusy(false)
       setLoading(false)

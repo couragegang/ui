@@ -169,6 +169,7 @@ export type ChatMessage = {
   toolName?: string
   connectorKey?: string
   hitlResolved?: 'approved' | 'rejected'
+  createdAt?: string
 }
 
 export type ChatResponse = {

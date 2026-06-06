@@ -2,6 +2,7 @@ import { StyleSheet, View } from 'react-native'
 import { Button, Text } from '@couragegang/design-system'
 import { colors, fontSize, radius, spacing } from '@couragegang/design-system/tokens'
 import type { ChatMessage } from '@couragegang/shared/types'
+import { formatMessageTimestamp } from '@couragegang/shared/format-message-time'
 
 import { strings } from '../strings'
 import { ChatMessageContent } from './ChatMessageContent'
@@ -27,7 +28,10 @@ export function ChatMessageBubble({ message, onApprove, onReject, hitlBusy }: Pr
     message.status &&
     message.status !== 'completed' &&
     message.status !== 'ok' &&
-    !isError
+    !isError &&
+    !message.hitlResolved
+
+  const timeLabel = formatMessageTimestamp(message.createdAt)
 
   return (
     <View style={[styles.row, isUser ? styles.rowUser : styles.rowAssistant]}>
@@ -85,6 +89,11 @@ export function ChatMessageBubble({ message, onApprove, onReject, hitlBusy }: Pr
               {strings.chat.hitlRejected}
             </Text>
           )}
+          {timeLabel ? (
+            <Text variant="muted" style={[styles.messageTime, isUser && styles.messageTimeUser]}>
+              {timeLabel}
+            </Text>
+          ) : null}
         </View>
       </View>
     </View>
@@ -179,6 +188,15 @@ const styles = StyleSheet.create({
   hitlRejected: {
     marginTop: spacing.sm,
     fontSize: fontSize.sm,
+  },
+  messageTime: {
+    marginTop: 6,
+    fontSize: 11,
+    lineHeight: 14,
+    color: colors.textMuted,
+  },
+  messageTimeUser: {
+    alignSelf: 'flex-end',
   },
   errorBubble: {
     borderLeftWidth: 3,
