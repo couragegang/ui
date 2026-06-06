@@ -23,7 +23,7 @@ export function TrelloAuthorizeLink({ apiKey, disabled }: TrelloAuthorizeLinkPro
         style={({ pressed }) => [styles.link, pressed && styles.pressed, disabled && styles.disabled]}
         onPress={() => void Linking.openURL(url)}
       >
-        <Text variant="label">{strings.mcp.trelloGetToken}</Text>
+        <Text variant="body">{strings.mcp.trelloGetToken}</Text>
       </Pressable>
       <Text variant="muted">{strings.mcp.trelloTokenPaste}</Text>
     </View>
