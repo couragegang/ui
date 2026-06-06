@@ -13,6 +13,7 @@ import {
 import { ApiError, fetchCatalogItem, installConnector } from '../../lib/api'
 import { ConnectionFormFields } from './ConnectionFormFields'
 import { NotionTargetPicker } from './NotionTargetPicker'
+import { TrelloAuthorizeLink } from './TrelloAuthorizeLink'
 import { TrelloBoardPicker } from './TrelloBoardPicker'
 import { PolicyPackSection } from './PolicyPackSection'
 
@@ -190,6 +191,11 @@ export function McpInstallModal({
               values={formValues}
               onChange={(key, value) => setFormValues((prev) => ({ ...prev, [key]: value }))}
               disabled={submitting}
+              renderAfterField={(field) =>
+                detail.connectorKey === 'trello' && field.key === 'api_key' ? (
+                  <TrelloAuthorizeLink apiKey={formValues.api_key ?? ''} disabled={submitting} />
+                ) : null
+              }
             />
 
             <PolicyPackSection

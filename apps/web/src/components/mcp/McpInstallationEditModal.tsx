@@ -11,6 +11,7 @@ import {
 import { ApiError, fetchInstallation, updateInstallation } from '../../lib/api'
 import { ConnectionFormFields } from './ConnectionFormFields'
 import { NotionTargetPicker } from './NotionTargetPicker'
+import { TrelloAuthorizeLink } from './TrelloAuthorizeLink'
 import { TrelloBoardPicker } from './TrelloBoardPicker'
 
 type Props = {
@@ -145,6 +146,11 @@ export function McpInstallationEditModal({ workspaceId, installation, onClose, o
               onChange={(key, value) => setFormValues((prev) => ({ ...prev, [key]: value }))}
               disabled={submitting}
               secretPlaceholder={secretsConfigured ? t('connections.secretKeep') : undefined}
+              renderAfterField={(field) =>
+                installation.connectorKey === 'trello' && field.key === 'api_key' ? (
+                  <TrelloAuthorizeLink apiKey={formValues.api_key ?? ''} disabled={submitting} />
+                ) : null
+              }
             />
             {error && <p className="error">{error}</p>}
             {success && <p className="success">{t('connections.saved')}</p>}

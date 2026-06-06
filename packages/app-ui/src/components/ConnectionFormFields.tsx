@@ -1,7 +1,8 @@
+import type { ReactNode } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Text } from '@couragegang/design-system'
 import { spacing } from '@couragegang/design-system/tokens'
-import type { ConnectionFormSchema } from '@couragegang/shared/types'
+import type { ConnectionFormField, ConnectionFormSchema } from '@couragegang/shared/types'
 import { inputTypeForField, localizedLabel } from '@couragegang/shared/mcp'
 
 import { TextField } from './TextField'
@@ -12,6 +13,7 @@ export type ConnectionFormFieldsProps = {
   onChange: (key: string, value: string) => void
   disabled?: boolean
   secretPlaceholder?: string
+  renderAfterField?: (field: ConnectionFormField, values: Record<string, string>) => ReactNode
 }
 
 export function ConnectionFormFields({
@@ -20,6 +22,7 @@ export function ConnectionFormFields({
   onChange,
   disabled,
   secretPlaceholder,
+  renderAfterField,
 }: ConnectionFormFieldsProps) {
   const fields = schema?.fields ?? []
   if (fields.length === 0) {
@@ -37,27 +40,31 @@ export function ConnectionFormFields({
 
         if (multiline) {
           return (
-            <TextField
-              key={field.key}
-              label={`${label}${suffix}`}
-              value={values[field.key] ?? ''}
-            onChangeText={(v) => onChange(field.key, v)}
-            secureTextEntry={false}
-            editable={!disabled}
-          />
+            <View key={field.key} style={styles.field}>
+              <TextField
+                label={`${label}${suffix}`}
+                value={values[field.key] ?? ''}
+                onChangeText={(v) => onChange(field.key, v)}
+                secureTextEntry={false}
+                editable={!disabled}
+              />
+              {renderAfterField?.(field, values)}
+            </View>
           )
         }
 
         return (
-          <TextField
-            key={field.key}
-            label={`${label}${suffix}`}
-            value={values[field.key] ?? ''}
-            onChangeText={(v) => onChange(field.key, v)}
-            secureTextEntry={isSecret}
-            placeholder={isSecret ? secretPlaceholder : localizedLabel(field.placeholder, field.key)}
-            editable={!disabled}
-          />
+          <View key={field.key} style={styles.field}>
+            <TextField
+              label={`${label}${suffix}`}
+              value={values[field.key] ?? ''}
+              onChangeText={(v) => onChange(field.key, v)}
+              secureTextEntry={isSecret}
+              placeholder={isSecret ? secretPlaceholder : localizedLabel(field.placeholder, field.key)}
+              editable={!disabled}
+            />
+            {renderAfterField?.(field, values)}
+          </View>
         )
       })}
     </View>
@@ -66,4 +73,5 @@ export function ConnectionFormFields({
 
 const styles = StyleSheet.create({
   wrap: { gap: spacing.md },
+  field: { gap: spacing.sm },
 })

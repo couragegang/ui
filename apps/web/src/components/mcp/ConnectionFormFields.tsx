@@ -1,4 +1,5 @@
-import type { ConnectionFormSchema } from '@couragegang/shared/types'
+import type { ReactNode } from 'react'
+import type { ConnectionFormField, ConnectionFormSchema } from '@couragegang/shared/types'
 import { inputTypeForField, localizedLabel } from '@couragegang/shared/mcp'
 
 type Props = {
@@ -8,9 +9,10 @@ type Props = {
   disabled?: boolean
   /** Placeholder для secret-полей при редактировании */
   secretPlaceholder?: string
+  renderAfterField?: (field: ConnectionFormField, values: Record<string, string>) => ReactNode
 }
 
-export function ConnectionFormFields({ schema, values, onChange, disabled, secretPlaceholder }: Props) {
+export function ConnectionFormFields({ schema, values, onChange, disabled, secretPlaceholder, renderAfterField }: Props) {
   const fields = schema?.fields ?? []
   if (fields.length === 0) {
     return <p className="muted">Нет полей подключения для этого инструмента.</p>
@@ -28,30 +30,33 @@ export function ConnectionFormFields({ schema, values, onChange, disabled, secre
           ? secretPlaceholder
           : localizedLabel(field.placeholder, undefined)
         return (
-          <label key={field.key}>
-            {label}
-            {required ? ' *' : ''}
-            {multiline ? (
-              <textarea
-                value={values[field.key] ?? ''}
-                onChange={(e) => onChange(field.key, e.target.value)}
-                required={required}
-                disabled={disabled}
-                rows={3}
-                placeholder={placeholder}
-              />
-            ) : (
-              <input
-                type={type}
-                value={values[field.key] ?? ''}
-                onChange={(e) => onChange(field.key, e.target.value)}
-                required={required}
-                disabled={disabled}
-                placeholder={placeholder}
-                autoComplete={type === 'password' ? 'off' : undefined}
-              />
-            )}
-          </label>
+          <div key={field.key} className="connection-form-field">
+            <label>
+              {label}
+              {required ? ' *' : ''}
+              {multiline ? (
+                <textarea
+                  value={values[field.key] ?? ''}
+                  onChange={(e) => onChange(field.key, e.target.value)}
+                  required={required}
+                  disabled={disabled}
+                  rows={3}
+                  placeholder={placeholder}
+                />
+              ) : (
+                <input
+                  type={type}
+                  value={values[field.key] ?? ''}
+                  onChange={(e) => onChange(field.key, e.target.value)}
+                  required={required}
+                  disabled={disabled}
+                  placeholder={placeholder}
+                  autoComplete={type === 'password' ? 'off' : undefined}
+                />
+              )}
+            </label>
+            {renderAfterField?.(field, values)}
+          </div>
         )
       })}
     </>

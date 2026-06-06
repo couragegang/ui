@@ -9,6 +9,7 @@
     "./hooks": "./src/hooks/index.ts",
     "./types": "./src/types.ts",
     "./mcp": "./src/mcp.ts",
+    "./trello": "./src/trello.ts",
     "./chat-storage": "./src/chat-storage.ts",
     "./permissions": "./src/permissions.ts",
     "./slug": "./src/slug.ts",

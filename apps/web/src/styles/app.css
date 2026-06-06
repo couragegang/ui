@@ -828,6 +828,26 @@ body.app-drawer-open {
   font-weight: 500;
 }
 
+.connection-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.trello-authorize-link {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: var(--surface-muted, rgba(0, 0, 0, 0.02));
+}
+
+.trello-authorize-link .btn {
+  align-self: flex-start;
+}
+
 input,
 select,
 textarea {

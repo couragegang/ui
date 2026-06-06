@@ -11,6 +11,7 @@ import type { ConnectionFormSchema, McpInstallation } from '@couragegang/shared/
 import { ConnectionFormFields } from './ConnectionFormFields.web'
 import { ModalSheet } from './ModalSheet.web'
 import { NotionTargetPicker } from './NotionTargetPicker.web'
+import { TrelloAuthorizeLink } from './TrelloAuthorizeLink.web'
 import { TrelloBoardPicker } from './TrelloBoardPicker.web'
 import { strings } from '../strings'
 
@@ -154,6 +155,11 @@ export function McpInstallationEditSheet({
             onChange={(key, value) => setFormValues((prev) => ({ ...prev, [key]: value }))}
             disabled={submitting}
             secretPlaceholder={secretsConfigured ? strings.connections.secretKeep : undefined}
+            renderAfterField={(field) =>
+              installation.connectorKey === 'trello' && field.key === 'api_key' ? (
+                <TrelloAuthorizeLink apiKey={formValues.api_key ?? ''} disabled={submitting} />
+              ) : null
+            }
           />
           {error && <p className="error">{error}</p>}
           <footer className="modal-footer">

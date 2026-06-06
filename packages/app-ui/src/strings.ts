@@ -123,6 +123,11 @@ export const strings = {
     trelloNoBoards: 'Доски не найдены',
     trelloSelectBoard: 'Выберите доску',
     trelloAutoIfEmpty: 'Если не выбрать — будет использована первая доступная доска.',
+    trelloTokenHint:
+      'После ввода API Key получите Token в Trello — ссылка подставит ваш ключ автоматически.',
+    trelloGetToken: 'Получить Token в Trello',
+    trelloTokenPaste:
+      'После авторизации скопируйте token из адресной строки (после token=) и вставьте в поле Token ниже.',
   },
   profile: {
     title: 'Профиль',

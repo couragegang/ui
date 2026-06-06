@@ -17,6 +17,7 @@ import type { McpCatalogItem, PolicyTemplatePack } from '@couragegang/shared/typ
 import { ConnectionFormFields } from './ConnectionFormFields'
 import { ModalSheet } from './ModalSheet'
 import { NotionTargetPicker } from './NotionTargetPicker'
+import { TrelloAuthorizeLink } from './TrelloAuthorizeLink'
 import { TrelloBoardPicker } from './TrelloBoardPicker'
 import { SelectField } from './SelectField'
 import { TextField } from './TextField'
@@ -167,6 +168,11 @@ export function McpInstallSheet({ api, item, visible, onClose, onInstalled }: Mc
             values={formValues}
             onChange={(key, value) => setFormValues((prev) => ({ ...prev, [key]: value }))}
             disabled={submitting}
+            renderAfterField={(field) =>
+              detail.connectorKey === 'trello' && field.key === 'api_key' ? (
+                <TrelloAuthorizeLink apiKey={formValues.api_key ?? ''} disabled={submitting} />
+              ) : null
+            }
           />
           <ErrorBanner message={error} />
           <View style={styles.footer}>
